@@ -36,14 +36,17 @@ public class WordNet {
         while (in.hasNextLine()) {
             String currentLine = in.readLine();
             String[] numbers = currentLine.split(",");
-            Integer v = Integer.parseInt(numbers[0]);
-            Integer w = Integer.parseInt(numbers[1]);
 
-            if (v < 0 || w < 0 || v >= size || w >= size) {
-                throw new IndexOutOfBoundsException();
+            Integer idV = Integer.parseInt(numbers[0]);
+            for (int i = 0; i < numbers.length; i++) {
+                Integer n = Integer.parseInt(numbers[i]);
+                if (n < 0 || n >= size)
+                    throw new IndexOutOfBoundsException();
+
+                if (i > 0) {
+                    graph.addEdge(idV, n);
+                }
             }
-
-            this.graph.addEdge(v, w);
         }
 
         // check the graph is valid rooted DAG or not
@@ -85,7 +88,7 @@ public class WordNet {
 
         Integer idForA = nounTable.get(nounA);
         Integer idForB = nounTable.get(nounB);
-        int sapId = sap.length(idForA, idForB);
+        int sapId = sap.ancestor(idForA, idForB);
         return synset.get(sapId);
     }
 
@@ -122,6 +125,14 @@ public class WordNet {
         WordNet wordNet = new WordNet(args[0], args[1]);
 
         StdOut.println(wordNet.isNoun("a"));
+        StdOut.println(wordNet.sap("a", "b"));
+        StdOut.println();
+        StdOut.println(wordNet.sap("b", "f"));
+        StdOut.println(wordNet.distance("b", "f"));
+
+        StdOut.println();
+        StdOut.println(wordNet.sap("c", "f"));
+        StdOut.println(wordNet.distance("c", "f"));
 
     }
 
