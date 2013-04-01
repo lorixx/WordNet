@@ -194,6 +194,7 @@ public class SAP {
             minStepsFromW[index] = 0;
         }
         shortestLengthSoFar = -1;
+        ancestor = -1;
     }
 
     private void calculateResults(int v, int w) {
@@ -206,87 +207,107 @@ public class SAP {
             return;
         }
 
+        this.cleanup();
+
         BreadthFirstDirectedPaths bfsForV = new BreadthFirstDirectedPaths(graph, v);
         BreadthFirstDirectedPaths bfsForW = new BreadthFirstDirectedPaths(graph, w);
 
 
-        this.cleanup();
-        Queue<Integer> queueForV = new Queue<Integer>();
-        queueForV.enqueue(v);
-        markedByV[v] = true;
-        minStepsFromV[v] = 0;
-        changedForV.enqueue(v);
+        for (int i = 0; i < graph.V(); i++) {
 
-        Queue<Integer> queueForW = new Queue<Integer>();
-        queueForW.enqueue(w);
-        markedByW[w] = true;
-        minStepsFromW[w] = 0;
-        changedForW.enqueue(w);
-
-        int currentStep = 0;
-
-        while (!queueForV.isEmpty() || !queueForW.isEmpty()) {
-
-            currentStep++;
-            if (!queueForV.isEmpty()) {
-                int currentV = queueForV.dequeue();
-                for (int a : graph.adj(currentV)) {
-
-                    if (!markedByV[a]) {
-                        //StdOut.println("a: " + a);
-                        changedForV.enqueue(a);
-                        markedByV[a] = true;
-                        minStepsFromV[a] = currentStep; // update current step
-                        queueForV.enqueue(a);
-
-                        //check whether it is marked by w
-                        if (markedByW[a]) {
-                            if (shortestLengthSoFar == -1) {
-                                shortestLengthSoFar = minStepsFromV[a] + minStepsFromW[a];
-                                ancestor = a;
-                            } else if ( minStepsFromV[a] + minStepsFromW[a] < shortestLengthSoFar) {
-                                shortestLengthSoFar = minStepsFromV[a] + minStepsFromW[a];
-                                ancestor = a;
-                            } else if (shortestLengthSoFar!= -1 && minStepsFromV[a] > shortestLengthSoFar) {
-                                //stop searching
-                                while(!queueForV.isEmpty()) queueForV.dequeue();
-                                break;
-                            }
-                        }
-                    }
-                } // end of for
-            }
-
-            if (!queueForW.isEmpty()) {
-                int currentW = queueForW.dequeue();
-                for (int b : graph.adj(currentW)) {
-
-                    if (!markedByW[b]) {
-                        //StdOut.println("b: " + b);
-                        changedForW.enqueue(b);
-                        markedByW[b] = true;
-                        minStepsFromW[b] = currentStep; // update current step
-                        queueForW.enqueue(b);
-
-                        //check whether it is marked by w
-                        if (markedByV[b]) {
-
-                            if (shortestLengthSoFar == -1) {
-                                shortestLengthSoFar = minStepsFromV[b] + minStepsFromW[b];
-                                ancestor = b;
-                            } else if ( minStepsFromV[b] + minStepsFromW[b] < shortestLengthSoFar) {
-                                shortestLengthSoFar = minStepsFromV[b] + minStepsFromW[b];
-                                ancestor = b;
-                            } else if (shortestLengthSoFar!= -1 && minStepsFromW[b] > shortestLengthSoFar) {
-                                //stop searching
-                                while(!queueForW.isEmpty()) queueForW.dequeue();
-                                break;
-                            }
-                        }
-                    }
-                } // end of for
+            if (bfsForV.hasPathTo(i) && bfsForW.hasPathTo(i)) {
+                StdOut.println(i);
+                if (shortestLengthSoFar == -1) {
+                    shortestLengthSoFar = bfsForV.distTo(i) + bfsForW.distTo(i);
+                    ancestor = i;
+                } else if (bfsForV.distTo(i) + bfsForW.distTo(i) < shortestLengthSoFar) {
+                    shortestLengthSoFar = bfsForV.distTo(i) + bfsForW.distTo(i);
+                    ancestor = i;
+                } else
+                    continue;
             }
         }
+
+
+
+//
+//        this.cleanup();
+//        Queue<Integer> queueForV = new Queue<Integer>();
+//        queueForV.enqueue(v);
+//        markedByV[v] = true;
+//        minStepsFromV[v] = 0;
+//        changedForV.enqueue(v);
+//
+//        Queue<Integer> queueForW = new Queue<Integer>();
+//        queueForW.enqueue(w);
+//        markedByW[w] = true;
+//        minStepsFromW[w] = 0;
+//        changedForW.enqueue(w);
+//
+//        int currentStep = 0;
+//
+//        while (!queueForV.isEmpty() || !queueForW.isEmpty()) {
+//
+//            currentStep++;
+//            if (!queueForV.isEmpty()) {
+//                int currentV = queueForV.dequeue();
+//                for (int a : graph.adj(currentV)) {
+//
+//                    if (!markedByV[a]) {
+//                        //StdOut.println("a: " + a);
+//                        changedForV.enqueue(a);
+//                        markedByV[a] = true;
+//                        minStepsFromV[a] = currentStep; // update current step
+//                        queueForV.enqueue(a);
+//
+//                        //check whether it is marked by w
+//                        if (markedByW[a]) {
+//                            if (shortestLengthSoFar == -1) {
+//                                shortestLengthSoFar = minStepsFromV[a] + minStepsFromW[a];
+//                                ancestor = a;
+//                            } else if ( minStepsFromV[a] + minStepsFromW[a] < shortestLengthSoFar) {
+//                                shortestLengthSoFar = minStepsFromV[a] + minStepsFromW[a];
+//                                ancestor = a;
+//                            } else if (shortestLengthSoFar!= -1 && minStepsFromV[a] > shortestLengthSoFar) {
+//                                //stop searching
+//                                while(!queueForV.isEmpty()) queueForV.dequeue();
+//                                break;
+//                            }
+//                        }
+//                    }
+//                } // end of for
+//            }
+//
+//            if (!queueForW.isEmpty()) {
+//                int currentW = queueForW.dequeue();
+//                for (int b : graph.adj(currentW)) {
+//
+//                    if (!markedByW[b]) {
+//                        //StdOut.println("b: " + b);
+//                        changedForW.enqueue(b);
+//                        markedByW[b] = true;
+//                        minStepsFromW[b] = currentStep; // update current step
+//                        queueForW.enqueue(b);
+//
+//                        //check whether it is marked by w
+//                        if (markedByV[b]) {
+//
+//                            if (shortestLengthSoFar == -1) {
+//                                shortestLengthSoFar = minStepsFromV[b] + minStepsFromW[b];
+//                                ancestor = b;
+//                            } else if ( minStepsFromV[b] + minStepsFromW[b] < shortestLengthSoFar) {
+//                                shortestLengthSoFar = minStepsFromV[b] + minStepsFromW[b];
+//                                ancestor = b;
+//                            } else if (shortestLengthSoFar!= -1 && minStepsFromW[b] > shortestLengthSoFar) {
+//                                //stop searching
+//                                while(!queueForW.isEmpty()) queueForW.dequeue();
+//                                break;
+//                            }
+//                        }
+//                    }
+//                } // end of for
+//            }
+//        }
     }
 
 
@@ -334,7 +355,7 @@ public class SAP {
         Digraph G = new Digraph(in);
         SAP sap = new SAP(G);
 
-        sap.test1(); sap.test2();sap.test3();
+        //sap.test1(); sap.test2();sap.test3();
 
         while (!StdIn.isEmpty()) {
             int v = StdIn.readInt();
