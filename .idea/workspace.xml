@@ -3,15 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="d268e4f9-6207-471b-9552-2ce56678fa39" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SAP.java" afterPath="$PROJECT_DIR$/src/SAP.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Algorithms.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/fragment.java" changelist="d268e4f9-6207-471b-9552-2ce56678fa39" time="1364833473594" ignored="false" />
-    <file path="/SAP.java" changelist="d268e4f9-6207-471b-9552-2ce56678fa39" time="1364845467494" ignored="false" />
+    <file path="/fragment.java" changelist="d268e4f9-6207-471b-9552-2ce56678fa39" time="1364847322938" ignored="false" />
+    <file path="/SAP.java" changelist="d268e4f9-6207-471b-9552-2ce56678fa39" time="1364847463168" ignored="false" />
     <file path="/.gitignore" changelist="d268e4f9-6207-471b-9552-2ce56678fa39" time="1364842602449" ignored="false" />
-    <file path="/Dummy.txt" changelist="d268e4f9-6207-471b-9552-2ce56678fa39" time="1364844620810" ignored="false" />
+    <file path="/Dummy.txt" changelist="d268e4f9-6207-471b-9552-2ce56678fa39" time="1364847845278" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,14 +73,16 @@
       <file leaf-file-name="SAP.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/SAP.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="187" column="35" selection-start="5924" selection-end="5924" vertical-scroll-proportion="0.53651685">
+            <state line="207" column="32" selection-start="6569" selection-end="6569" vertical-scroll-proportion="1.0518359">
               <folding>
-                <element signature="e#4628#4637#0" expanded="true" />
-                <element signature="e#4677#4686#0" expanded="true" />
-                <element signature="e#5032#5041#0" expanded="true" />
-                <element signature="e#5081#5090#0" expanded="true" />
-                <element signature="e#5456#5465#0" expanded="true" />
-                <element signature="e#5505#5514#0" expanded="true" />
+                <element signature="e#4626#4635#0" expanded="true" />
+                <element signature="e#4675#4684#0" expanded="true" />
+                <element signature="e#5030#5039#0" expanded="true" />
+                <element signature="e#5079#5088#0" expanded="true" />
+                <element signature="e#5454#5463#0" expanded="true" />
+                <element signature="e#5503#5512#0" expanded="true" />
+                <element signature="e#5929#5938#0" expanded="true" />
+                <element signature="e#5978#5987#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -289,7 +290,7 @@
       <recent name="C:\repositories\Algorithms\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SAP with digraph2">
+  <component name="RunManager" selected="Application.SAP with digraph3">
     <configuration default="false" name="SAP with digraph1" type="Application" factoryName="Application" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="SAP" />
@@ -421,9 +422,27 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <list size="2">
+    <configuration default="false" name="SAP with digraph3" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="SAP" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="C:\Users\zhuang\algs4\WordNet\digraph3.txt" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Algorithms" />
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Application.SAP with digraph2" />
-      <item index="1" class="java.lang.String" itemvalue="Application.SAP with digraph1" />
+      <item index="1" class="java.lang.String" itemvalue="Application.SAP with digraph3" />
+      <item index="2" class="java.lang.String" itemvalue="Application.SAP with digraph1" />
     </list>
     <recent_temporary>
       <list size="1">
@@ -464,9 +483,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1432" y="-8" width="1456" height="916" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32806325" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32806325" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -483,7 +502,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16427547" sideWeight="0.71146244" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16427547" sideWeight="0.67193675" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28853756" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -659,14 +678,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SAP.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="187" column="35" selection-start="5924" selection-end="5924" vertical-scroll-proportion="0.53651685">
+        <state line="207" column="32" selection-start="6569" selection-end="6569" vertical-scroll-proportion="1.0518359">
           <folding>
-            <element signature="e#4628#4637#0" expanded="true" />
-            <element signature="e#4677#4686#0" expanded="true" />
-            <element signature="e#5032#5041#0" expanded="true" />
-            <element signature="e#5081#5090#0" expanded="true" />
-            <element signature="e#5456#5465#0" expanded="true" />
-            <element signature="e#5505#5514#0" expanded="true" />
+            <element signature="e#4626#4635#0" expanded="true" />
+            <element signature="e#4675#4684#0" expanded="true" />
+            <element signature="e#5030#5039#0" expanded="true" />
+            <element signature="e#5079#5088#0" expanded="true" />
+            <element signature="e#5454#5463#0" expanded="true" />
+            <element signature="e#5503#5512#0" expanded="true" />
+            <element signature="e#5929#5938#0" expanded="true" />
+            <element signature="e#5978#5987#0" expanded="true" />
           </folding>
         </state>
       </provider>

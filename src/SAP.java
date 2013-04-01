@@ -139,8 +139,6 @@ public class SAP {
                     continue;
             }
         }
-
-
     }
 
 
@@ -183,6 +181,20 @@ public class SAP {
         assert this.length(listV, listW) == 2 : "This should be 2";
     }
 
+    /* This test is only worked for digraph3.txt */
+    public void test4() {
+        Bag<Integer> listV = new Bag<Integer>();
+        Bag<Integer> listW = new Bag<Integer>();
+
+        listV.add(7); listV.add(8);listV.add(0);
+        listW.add(1); listW.add(3);
+
+
+        StdOut.println("length is " + this.length(listV, listW));
+        StdOut.println("ancestor is " + this.ancestor(listV, listW));
+        assert this.length(listV, listW) == 2 : "This should be 2";
+    }
+
     // for unit testing of this class (such as the one below)
     public static void main(String[] args) {
 
@@ -191,7 +203,8 @@ public class SAP {
         Digraph G = new Digraph(in);
         SAP sap = new SAP(G);
 
-        //sap.test1(); sap.test2();sap.test3();
+        sap.test1(); sap.test2();sap.test3();
+        //sap.test4();
 
         while (!StdIn.isEmpty()) {
             int v = StdIn.readInt();
