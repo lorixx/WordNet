@@ -5,7 +5,7 @@
     <ignored path="Algorithms.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/fragment.java" changelist="d268e4f9-6207-471b-9552-2ce56678fa39" time="1364833473594" ignored="false" />
-    <file path="/SAP.java" changelist="d268e4f9-6207-471b-9552-2ce56678fa39" time="1364839386992" ignored="false" />
+    <file path="/SAP.java" changelist="d268e4f9-6207-471b-9552-2ce56678fa39" time="1364840441709" ignored="false" />
     <file path="/.gitignore" changelist="d268e4f9-6207-471b-9552-2ce56678fa39" time="1364840210723" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -57,7 +57,7 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/src/SAP.java" line="309" class="SAP" package="">
+      <breakpoint url="file://$PROJECT_DIR$/src/SAP.java" line="313" class="SAP" package="">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -84,29 +84,42 @@
       <file leaf-file-name="SAP.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/SAP.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="320" column="29" selection-start="10136" selection-end="10136" vertical-scroll-proportion="0.0">
+            <state line="209" column="88" selection-start="6087" selection-end="6087" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#1490#1499#0" expanded="true" />
                 <element signature="e#1547#1556#0" expanded="true" />
                 <element signature="e#3485#3494#0" expanded="true" />
                 <element signature="e#3542#3551#0" expanded="true" />
-                <element signature="e#5986#5995#0" expanded="true" />
-                <element signature="e#6165#6174#0" expanded="true" />
-                <element signature="e#9299#9308#0" expanded="true" />
-                <element signature="e#9348#9357#0" expanded="true" />
-                <element signature="e#9618#9627#0" expanded="true" />
-                <element signature="e#9667#9676#0" expanded="true" />
-                <element signature="e#9957#9966#0" expanded="true" />
-                <element signature="e#10006#10015#0" expanded="true" />
+                <element signature="e#6158#6167#0" expanded="true" />
+                <element signature="e#6337#6346#0" expanded="true" />
+                <element signature="e#9471#9480#0" expanded="true" />
+                <element signature="e#9520#9529#0" expanded="true" />
+                <element signature="e#9790#9799#0" expanded="true" />
+                <element signature="e#9839#9848#0" expanded="true" />
+                <element signature="e#10129#10138#0" expanded="true" />
+                <element signature="e#10178#10187#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="DeluxeBFS.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/DeluxeBFS.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="57" column="30" selection-start="1782" selection-end="1782" vertical-scroll-proportion="0.7757009">
+              <folding>
+                <element signature="e#1103#1112#0" expanded="true" />
+                <element signature="e#1655#1664#0" expanded="true" />
+                <element signature="e#2572#2581#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="17" selection-start="8" selection-end="8" vertical-scroll-proportion="0.028037382">
+            <state line="1" column="20" selection-start="8" selection-end="8" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -167,8 +180,9 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/SAP.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/SAP.java" />
+        <option value="$PROJECT_DIR$/src/DeluxeBFS.java" />
       </list>
     </option>
   </component>
@@ -567,30 +581,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="20" selection-start="8" selection-end="8" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/SAP.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="320" column="29" selection-start="10136" selection-end="10136" vertical-scroll-proportion="0.0">
+        <state line="209" column="88" selection-start="6087" selection-end="6087" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#1490#1499#0" expanded="true" />
             <element signature="e#1547#1556#0" expanded="true" />
             <element signature="e#3485#3494#0" expanded="true" />
             <element signature="e#3542#3551#0" expanded="true" />
-            <element signature="e#5986#5995#0" expanded="true" />
-            <element signature="e#6165#6174#0" expanded="true" />
-            <element signature="e#9299#9308#0" expanded="true" />
-            <element signature="e#9348#9357#0" expanded="true" />
-            <element signature="e#9618#9627#0" expanded="true" />
-            <element signature="e#9667#9676#0" expanded="true" />
-            <element signature="e#9957#9966#0" expanded="true" />
-            <element signature="e#10006#10015#0" expanded="true" />
+            <element signature="e#6158#6167#0" expanded="true" />
+            <element signature="e#6337#6346#0" expanded="true" />
+            <element signature="e#9471#9480#0" expanded="true" />
+            <element signature="e#9520#9529#0" expanded="true" />
+            <element signature="e#9790#9799#0" expanded="true" />
+            <element signature="e#9839#9848#0" expanded="true" />
+            <element signature="e#10129#10138#0" expanded="true" />
+            <element signature="e#10178#10187#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/src/DeluxeBFS.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="17" selection-start="8" selection-end="8" vertical-scroll-proportion="0.028037382">
-          <folding />
+        <state line="57" column="30" selection-start="1782" selection-end="1782" vertical-scroll-proportion="0.7757009">
+          <folding>
+            <element signature="e#1103#1112#0" expanded="true" />
+            <element signature="e#1655#1664#0" expanded="true" />
+            <element signature="e#2572#2581#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

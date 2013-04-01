@@ -206,6 +206,10 @@ public class SAP {
             return;
         }
 
+        BreadthFirstDirectedPaths bfsForV = new BreadthFirstDirectedPaths(graph, v);
+        BreadthFirstDirectedPaths bfsForW = new BreadthFirstDirectedPaths(graph, w);
+
+
         this.cleanup();
         Queue<Integer> queueForV = new Queue<Integer>();
         queueForV.enqueue(v);
