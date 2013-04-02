@@ -142,69 +142,65 @@ public class SAP {
     }
 
 
-    public void test1() {
-        Bag<Integer> listV = new Bag<Integer>();
-        Bag<Integer> listW = new Bag<Integer>();
-
-        listV.add(7); listV.add(8);listV.add(4);
-        listW.add(9); listW.add(11);
-
-
-        StdOut.println("length is " + this.length(listV, listW));
-        StdOut.println("ancestor is " + this.ancestor(listV, listW));
-        assert this.length(listV, listW) == 8;
-    }
-
-    public void test2()  {
-        Bag<Integer> listV = new Bag<Integer>();
-        Bag<Integer> listW = new Bag<Integer>();
-
-        listV.add(9); listV.add(1);listV.add(2);
-        listW.add(9); listW.add(5);
-
-
-        StdOut.println("length is " + this.length(listV, listW));
-        StdOut.println("ancestor is " + this.ancestor(listV, listW));
-        assert this.length(listV, listW) == 4 : "This should be 4";
-    }
-
-    public void test3()  {
-        Bag<Integer> listV = new Bag<Integer>();
-        Bag<Integer> listW = new Bag<Integer>();
-
-        listV.add(7); listV.add(1);listV.add(1);
-        listW.add(1); listW.add(7);
-
-
-        StdOut.println("length is " + this.length(listV, listW));
-        StdOut.println("ancestor is " + this.ancestor(listV, listW));
-        assert this.length(listV, listW) == 2 : "This should be 2";
-    }
-
-    /* This test is only worked for digraph3.txt */
-    public void test4() {
-        Bag<Integer> listV = new Bag<Integer>();
-        Bag<Integer> listW = new Bag<Integer>();
-
-        listV.add(7); listV.add(8);listV.add(0);
-        listW.add(1); listW.add(3);
-
-
-        StdOut.println("length is " + this.length(listV, listW));
-        StdOut.println("ancestor is " + this.ancestor(listV, listW));
-        assert this.length(listV, listW) == 2 : "This should be 2";
-    }
+//    public void test1() {
+//        Bag<Integer> listV = new Bag<Integer>();
+//        Bag<Integer> listW = new Bag<Integer>();
+//
+//        listV.add(7); listV.add(8);listV.add(4);
+//        listW.add(9); listW.add(11);
+//
+//
+//        StdOut.println("length is " + this.length(listV, listW));
+//        StdOut.println("ancestor is " + this.ancestor(listV, listW));
+//        assert this.length(listV, listW) == 8;
+//    }
+//
+//    public void test2()  {
+//        Bag<Integer> listV = new Bag<Integer>();
+//        Bag<Integer> listW = new Bag<Integer>();
+//
+//        listV.add(9); listV.add(1);listV.add(2);
+//        listW.add(9); listW.add(5);
+//
+//
+//        StdOut.println("length is " + this.length(listV, listW));
+//        StdOut.println("ancestor is " + this.ancestor(listV, listW));
+//        assert this.length(listV, listW) == 4 : "This should be 4";
+//    }
+//
+//    public void test3()  {
+//        Bag<Integer> listV = new Bag<Integer>();
+//        Bag<Integer> listW = new Bag<Integer>();
+//
+//        listV.add(7); listV.add(1);listV.add(1);
+//        listW.add(1); listW.add(7);
+//
+//
+//        StdOut.println("length is " + this.length(listV, listW));
+//        StdOut.println("ancestor is " + this.ancestor(listV, listW));
+//        assert this.length(listV, listW) == 2 : "This should be 2";
+//    }
+//
+//    /* This test is only worked for digraph3.txt */
+//    public void test4() {
+//        Bag<Integer> listV = new Bag<Integer>();
+//        Bag<Integer> listW = new Bag<Integer>();
+//
+//        listV.add(7); listV.add(8);listV.add(0);
+//        listW.add(1); listW.add(3);
+//
+//
+//        StdOut.println("length is " + this.length(listV, listW));
+//        StdOut.println("ancestor is " + this.ancestor(listV, listW));
+//        assert this.length(listV, listW) == 2 : "This should be 2";
+//    }
 
     // for unit testing of this class (such as the one below)
     public static void main(String[] args) {
 
-
         In in = new In(args[0]);
         Digraph G = new Digraph(in);
         SAP sap = new SAP(G);
-
-        sap.test1(); sap.test2();sap.test3();
-        //sap.test4();
 
         while (!StdIn.isEmpty()) {
             int v = StdIn.readInt();
