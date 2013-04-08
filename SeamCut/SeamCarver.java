@@ -14,6 +14,180 @@ public class SeamCarver {
 
     private int[][] marked; // 0: unmarked, 1: temporarily marked, 2: permanently marked
 
+    public SeamCarver(Picture picture) {
+        pic = picture;
+
+        energies = new double[pic.width()][pic.height()];
+        marked = new int[pic.width()][pic.height()];
+        edgeTo = new int[pic.width()][pic.height()];
+        distTo = new double[pic.width()][pic.height()];
+
+        prepareForMode(0); //set up with horizontal first
+    }
+
+    public Picture picture()                       // current picture
+    {
+        return pic;
+    }
+
+    public int width()                         // width of current picture
+    {
+        return pic.width();
+    }
+
+    public int height()                        // height of current picture
+    {
+        return pic.height();
+    }
+
+    public double energy(int x, int y)            // energy of pixel at column x and row y
+    {
+        if (x < 0 || y < 0 || x > width() - 1 || y > height() - 1) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        if (x == 0 || y == 0 || x == width() - 1 || y == height() - 1) {
+            return EDGE_ENERGY;
+        }
+
+        Color leftColor = pic.get(x - 1, y);
+        Color rightColor = pic.get(x + 1, y);
+        Color topColor = pic.get(x, y - 1);
+        Color bottomColor = pic.get(x, y + 1);
+
+        return calculateEnergyForTwoColor(leftColor, rightColor) + calculateEnergyForTwoColor(topColor, bottomColor);
+    }
+
+    public int[] findHorizontalSeam()            // sequence of indices for horizontal seam
+    {
+        prepareForMode(0); //prepare for horizontal
+        int[] rows = new int[width()];
+
+        // this is a left-right topological sort
+        Stack<Node> results = this.getTopologicalOrder(0);
+        for (Node node : results) {
+            horizontalRelax(node);
+        }
+
+        double min = distTo[width() - 1][0];
+        int index = 0;
+        for (int i = 0; i < height(); i++) {
+            if (min > distTo[width() - 1][i]) {
+                min = distTo[width() - 1][i];
+                index = i;
+            }
+        }
+
+        rows[width() - 1] = index;
+
+        for (int j = width() - 2; j >= 0; j--) {
+            rows[j] = edgeTo[j + 1][index];
+            index = edgeTo[j + 1][index];
+        }
+
+        for (int k : rows) {
+            StdOut.println(k);
+        }
+
+        return rows;
+
+
+    }
+
+    public int[] findVerticalSeam()              // sequence of indices for vertical seam
+    {
+        prepareForMode(1); //prepare for vertical
+        int[] columns = new int[height()];
+
+        //this is top-down topological sort
+        Stack<Node> results = this.getTopologicalOrder(1);
+
+        for (Node node : results) {
+            verticalRelax(node);
+        }
+
+        double min = distTo[0][height() - 1];
+        int index = 0;
+        for (int i = 0; i < width(); i++) {
+            if (min > distTo[i][height() - 1]) {
+                min = distTo[i][height() - 1];
+                index = i;
+            }
+        }
+
+        columns[height() - 1] = index;
+
+        for (int j = height() - 2; j >= 0; j--) {
+            columns[j] = edgeTo[index][j + 1];
+            index = edgeTo[index][j + 1];
+        }
+
+        return columns;
+    }
+
+    public void removeHorizontalSeam(int[] a)   // remove horizontal seam from picture
+    {
+        if (width() <= 1 || height() <= 1) {
+            throw new IllegalArgumentException();
+        }
+
+        if (a.length <= 0 || a.length > width()) {
+            throw new IllegalArgumentException();
+        }
+
+        if (a.length > 1) {
+            for (int i = 0; i < a.length - 1; i++) {
+                if (Math.abs(a[i] - a[i + 1]) > 1) {
+                    throw new IllegalArgumentException();
+                }
+            }
+        }
+
+        Picture picture = new Picture(width(), height() - 1);
+
+        for (int i = 0; i < width(); i++) {
+            for (int j = 0, k = 0; j < height(); j++) {
+                if (j != a[i]) {
+                    picture.set(i, k, pic.get(i, j));
+                    k++;
+                }
+            }
+        }
+
+        this.pic = picture;
+    }
+
+    public void removeVerticalSeam(int[] a)     // remove vertical seam from picture
+    {
+        if (width() <= 1 || height() <= 1) {
+            throw new IllegalArgumentException();
+        }
+
+        if (a.length <= 0 || a.length > height()) {
+            throw new IllegalArgumentException();
+        }
+
+        if (a.length > 1) {
+            for (int i = 0; i < a.length - 1; i++) {
+                if (Math.abs(a[i] - a[i + 1]) > 1) {
+                    throw new IllegalArgumentException();
+                }
+            }
+        }
+
+        Picture picture = new Picture(width() - 1, height());
+
+        for (int i = 0; i < height(); i++) {
+            for (int j = 0, k = 0; j < width(); j++) {
+                if (j != a[i]) {
+                    picture.set(k, i, pic.get(j, i));
+                    k++;
+                }
+            }
+        }
+
+        this.pic = picture;
+    }
 
     private class Node {
         int x;
@@ -42,7 +216,6 @@ public class SeamCarver {
 
         return results;
     }
-
 
     // not efficient yet since we create new nodes
     private void visit(int x, int y, Stack<Node> results, int mode) {
@@ -115,50 +288,6 @@ public class SeamCarver {
         }
     }
 
-    public SeamCarver(Picture picture) {
-        pic = picture;
-
-        energies = new double[pic.width()][pic.height()];
-        marked = new int[pic.width()][pic.height()];
-        edgeTo = new int[pic.width()][pic.height()];
-        distTo = new double[pic.width()][pic.height()];
-
-        prepareForMode(0); //set up with horizontal first
-    }
-
-    public Picture picture()                       // current picture
-    {
-        return pic;
-    }
-
-    public int width()                         // width of current picture
-    {
-        return pic.width();
-    }
-
-    public int height()                        // height of current picture
-    {
-        return pic.height();
-    }
-
-    public double energy(int x, int y)            // energy of pixel at column x and row y
-    {
-        if (x < 0 || y < 0 || x > width() - 1 || y > height() - 1) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        if (x == 0 || y == 0 || x == width() - 1 || y == height() - 1) {
-            return EDGE_ENERGY;
-        }
-
-        Color leftColor = pic.get(x - 1, y);
-        Color rightColor = pic.get(x + 1, y);
-        Color topColor = pic.get(x, y - 1);
-        Color bottomColor = pic.get(x, y + 1);
-
-        return calculateEnergyForTwoColor(leftColor, rightColor) + calculateEnergyForTwoColor(topColor, bottomColor);
-    }
-
     private int calculateEnergyForTwoColor(Color a, Color b) {
         int red = (int) Math.pow(a.getRed() - b.getRed(), 2);
         int blue = (int) Math.pow(a.getBlue() - b.getBlue(), 2);
@@ -204,7 +333,6 @@ public class SeamCarver {
         }
     }
 
-    //todo:
     private void horizontalRelax(Node n) {
         int x = n.x;
         int y = n.y;
@@ -240,132 +368,6 @@ public class SeamCarver {
                 edgeTo[x + 1][y + 1] = y; //set the edge to for its end
             }
         }
-    }
-
-    public int[] findHorizontalSeam()            // sequence of indices for horizontal seam
-    {
-        prepareForMode(0); //prepare for horizontal
-        int[] rows = new int[width()];
-
-        // this is a left-right topological sort
-        Stack<Node> results = this.getTopologicalOrder(0);
-        for (Node node : results) {
-            horizontalRelax(node);
-        }
-
-        double min = distTo[width() - 1][0];
-        int index = 0;
-        for (int i = 0; i < height(); i++) {
-            if (min > distTo[width() - 1][i]) {
-                min = distTo[width() - 1][i];
-                index = i;
-            }
-        }
-
-        rows[width() - 1] = index;
-
-        for (int j = width() - 2; j >= 0; j--) {
-            rows[j] = edgeTo[j + 1][index];
-            index = edgeTo[j + 1][index];
-        }
-
-        for (int k : rows)
-            StdOut.println(k);
-
-        return rows;
-
-
-    }
-
-    public int[] findVerticalSeam()              // sequence of indices for vertical seam
-    {
-        prepareForMode(1); //prepare for vertical
-        int[] columns = new int[height()];
-
-        //this is top-down topological sort
-        Stack<Node> results = this.getTopologicalOrder(1);
-
-        for (Node node : results) {
-            verticalRelax(node);
-        }
-
-        double min = distTo[0][height() - 1];
-        int index = 0;
-        for (int i = 0; i < width(); i++) {
-            if (min > distTo[i][height() - 1]) {
-                min = distTo[i][height() - 1];
-                index = i;
-            }
-        }
-
-        columns[height() - 1] = index;
-
-        for (int j = height() - 2; j >= 0; j--) {
-            columns[j] = edgeTo[index][j + 1];
-            index = edgeTo[index][j + 1];
-        }
-
-        return columns;
-    }
-
-    public void removeHorizontalSeam(int[] a)   // remove horizontal seam from picture
-    {
-        if (width() <= 1 || height() <= 1)
-            throw new IllegalArgumentException();
-
-        if (a.length <= 0 || a.length > width())
-            throw new IllegalArgumentException();
-
-        if (a.length > 1) {
-            for (int i = 0; i < a.length - 1; i++) {
-                if (Math.abs(a[i] - a[i + 1]) > 1) {
-                    throw new IllegalArgumentException();
-                }
-            }
-        }
-
-        Picture picture = new Picture(width(), height() - 1);
-
-        for (int i = 0; i < width(); i++) {
-            for (int j = 0, k= 0; j < height(); j++) {
-                if (j != a[i]) {
-                    picture.set(i, k, pic.get(i, j));
-                    k++;
-                }
-            }
-        }
-
-        this.pic = picture;
-    }
-
-    public void removeVerticalSeam(int[] a)     // remove vertical seam from picture
-    {
-        if (width() <= 1 || height() <= 1)
-            throw new IllegalArgumentException();
-
-        if (a.length <= 0 || a.length > height())
-            throw new IllegalArgumentException();
-
-        if (a.length > 1) {
-            for (int i = 0; i < a.length - 1; i++) {
-                if (Math.abs(a[i] - a[i + 1]) > 1) {
-                    throw new IllegalArgumentException();
-                }
-            }
-        }
-
-        Picture picture = new Picture(width() - 1, height());
-
-        for (int i = 0; i < height(); i++) {
-            for (int j = 0, k= 0; j < width(); j++) {
-                if (j != a[i]) {
-                    picture.set(k, i, pic.get(j, i));
-                    k++;
-                }
-            }
-        }
-
-        this.pic = picture;
     }
 
     public static void main(String[] args) {
