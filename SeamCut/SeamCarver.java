@@ -6,8 +6,18 @@ public class SeamCarver {
 
     private static final int EDGE_ENERGY = 195075;
 
+    private double [][] energies;
+
     public SeamCarver(Picture picture) {
         pic = picture;
+
+        energies = new double [pic.width()][];
+
+        for (int x = 0; x < pic.width(); x++) {
+            for (int y = 0; y < pic.height(); y++) {
+                energies[x][y] = energy(x, y);
+            }
+        }
 
     }
     public Picture picture()                       // current picture
