@@ -25,7 +25,6 @@ public class SeamCarver {
         }
     }
 
-    //todo: top-down first
     private Stack<Node> getTopologicalOrder(int mode) {
 
         Queue<Node> nodes = new Queue<Node>();
@@ -248,10 +247,9 @@ public class SeamCarver {
         prepareForMode(0); //prepare for horizontal
         int[] rows = new int[width()];
 
-        // this is a left-right topoligical sort
+        // this is a left-right topological sort
         Stack<Node> results = this.getTopologicalOrder(0);
         for (Node node : results) {
-            //StdOut.printf("(%s, %s)\n", node.x, node.y);
             horizontalRelax(node);
         }
 
@@ -288,28 +286,8 @@ public class SeamCarver {
         Stack<Node> results = this.getTopologicalOrder(1);
 
         for (Node node : results) {
-            // StdOut.printf("(%s, %s)\n", node.x, node.y);
             verticalRelax(node);
         }
-//
-//
-//        for (int j = 0; j < height(); j++) {
-//            for (int i = 0; i < width(); i++) {
-//                System.out.printf("%s ", distTo[i][j]);
-//            }
-//
-//            System.out.printf("\n");
-//        }
-//
-//        StdOut.println();
-//
-//        for (int j = 0; j < height(); j++) {
-//            for (int i = 0; i < width(); i++) {
-//                System.out.printf("%s ", edgeTo[i][j]);
-//            }
-//
-//            System.out.printf("\n");
-//        }
 
         double min = distTo[0][height() - 1];
         int index = 0;
@@ -327,31 +305,77 @@ public class SeamCarver {
             index = edgeTo[index][j + 1];
         }
 
-//        for (int k : columns)
-//            StdOut.println(k);
-
         return columns;
-
     }
 
     public void removeHorizontalSeam(int[] a)   // remove horizontal seam from picture
     {
+        if (width() <= 1 || height() <= 1)
+            throw new IllegalArgumentException();
 
+        if (a.length <= 0 || a.length > width())
+            throw new IllegalArgumentException();
+
+        if (a.length > 1) {
+            for (int i = 0; i < a.length - 1; i++) {
+                if (Math.abs(a[i] - a[i + 1]) > 1) {
+                    throw new IllegalArgumentException();
+                }
+            }
+        }
+
+        Picture picture = new Picture(width(), height() - 1);
+
+        for (int i = 0; i < width(); i++) {
+            for (int j = 0, k= 0; j < height(); j++) {
+                if (j != a[i]) {
+                    picture.set(i, k, pic.get(i, j));
+                    k++;
+                }
+            }
+        }
+
+        this.pic = picture;
     }
 
     public void removeVerticalSeam(int[] a)     // remove vertical seam from picture
     {
+        if (width() <= 1 || height() <= 1)
+            throw new IllegalArgumentException();
 
+        if (a.length <= 0 || a.length > height())
+            throw new IllegalArgumentException();
+
+        if (a.length > 1) {
+            for (int i = 0; i < a.length - 1; i++) {
+                if (Math.abs(a[i] - a[i + 1]) > 1) {
+                    throw new IllegalArgumentException();
+                }
+            }
+        }
+
+        Picture picture = new Picture(width() - 1, height());
+
+        for (int i = 0; i < height(); i++) {
+            for (int j = 0, k= 0; j < width(); j++) {
+                if (j != a[i]) {
+                    picture.set(k, i, pic.get(j, i));
+                    k++;
+                }
+            }
+        }
+
+        this.pic = picture;
     }
 
     public static void main(String[] args) {
-        StdOut.println("haha");
+
         Picture inputImg = new Picture(args[0]);
         System.out.printf("image is %d pixels wide by %d pixels high.\n", inputImg.width(), inputImg.height());
 
         SeamCarver sc = new SeamCarver(inputImg);
 
-        //sc.findVerticalSeam();
+        sc.findVerticalSeam();
         sc.findHorizontalSeam();
 
         System.out.printf("Printing energy calculated for each pixel.\n");
@@ -360,10 +384,7 @@ public class SeamCarver {
             for (int i = 0; i < sc.width(); i++) {
                 System.out.printf("%9.0f ", sc.energy(i, j));
             }
-
             System.out.println();
         }
     }
-
-
 }
