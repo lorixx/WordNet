@@ -207,7 +207,40 @@ public class SeamCarver {
 
     //todo:
     private void horizontalRelax(Node n) {
+        int x = n.x;
+        int y = n.y;
+        if (y == height() - 1 || x == width() - 1) {
+            // do nothing since we are already at the bottom
 
+        } else if (y == 0) {
+            // handle two edges
+            if (distTo[x + 1][y] > distTo[x][y] + energies[x + 1][y]) {
+                distTo[x + 1][y] = distTo[x][y] + energies[x + 1][y];
+                edgeTo[x + 1][y] = y; //set the edge to for its end
+            }
+
+            if (distTo[x + 1][y + 1] > distTo[x][y] + energies[x + 1][y + 1]) {
+                distTo[x + 1][y + 1] = distTo[x][y] + energies[x + 1][y + 1];
+                edgeTo[x + 1][y + 1] = y; //set the edge to for its end
+            }
+
+        } else {
+            // handle three edges
+            if (distTo[x + 1][y - 1] > distTo[x][y] + energies[x + 1][y - 1]) {
+                distTo[x + 1][y - 1] = distTo[x][y] + energies[x + 1][y - 1];
+                edgeTo[x + 1][y - 1] = y; //set the edge to for its end
+            }
+
+            if (distTo[x + 1][y] > distTo[x][y] + energies[x + 1][y]) {
+                distTo[x + 1][y] = distTo[x][y] + energies[x + 1][y];
+                edgeTo[x + 1][y] = y; //set the edge to for its end
+            }
+
+            if (distTo[x + 1][y + 1] > distTo[x][y] + energies[x + 1][y + 1]) {
+                distTo[x + 1][y + 1] = distTo[x][y] + energies[x + 1][y + 1];
+                edgeTo[x + 1][y + 1] = y; //set the edge to for its end
+            }
+        }
     }
 
     public int[] findHorizontalSeam()            // sequence of indices for horizontal seam
@@ -222,25 +255,27 @@ public class SeamCarver {
             horizontalRelax(node);
         }
 
-        for (int j = 0; j < height(); j++) {
-            for (int i = 0; i < width(); i++) {
-                System.out.printf("%s ", distTo[i][j]);
+        double min = distTo[width() - 1][0];
+        int index = 0;
+        for (int i = 0; i < height(); i++) {
+            if (min > distTo[width() - 1][i]) {
+                min = distTo[width() - 1][i];
+                index = i;
             }
-
-            System.out.printf("\n");
         }
 
-        StdOut.println();
+        rows[width() - 1] = index;
 
-        for (int j = 0; j < height(); j++) {
-            for (int i = 0; i < width(); i++) {
-                System.out.printf("%s ", edgeTo[i][j]);
-            }
-
-            System.out.printf("\n");
+        for (int j = width() - 2; j >= 0; j--) {
+            rows[j] = edgeTo[j + 1][index];
+            index = edgeTo[j + 1][index];
         }
 
-        return null;
+        for (int k : rows)
+            StdOut.println(k);
+
+        return rows;
+
 
     }
 
