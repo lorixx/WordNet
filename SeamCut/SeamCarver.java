@@ -25,8 +25,8 @@ public class SeamCarver {
         }
     }
 
-    //top-down first
-    private Stack<Node> getTopologicalOrder() {
+    //todo: top-down first
+    private Stack<Node> getTopologicalOrder(int mode) {
 
         Queue<Node> nodes = new Queue<Node>();
         Stack<Node> results = new Stack<Node>();
@@ -38,7 +38,7 @@ public class SeamCarver {
 
         while (!nodes.isEmpty()) {
             Node currentNode = nodes.dequeue();
-            visit(currentNode.x, currentNode.y, results);
+            visit(currentNode.x, currentNode.y, results, mode);
         }
 
         return results;
@@ -46,7 +46,7 @@ public class SeamCarver {
 
 
     // not efficient yet since we create new nodes
-    private void visit(int x, int y, Stack<Node> results) {
+    private void visit(int x, int y, Stack<Node> results, int mode) {
 
         if (marked[x][y] == 1) {
             StdOut.println("This is not a DAG.");
@@ -54,19 +54,34 @@ public class SeamCarver {
         } else if (marked[x][y] == 0) {
             marked[x][y] = 1;
 
+            if (mode == 0) {
+                if (y == height() - 1 || x == width() - 1) {
+                    // do nothing since we are already at the bottom
 
-            //visit all
-            if (y == height() - 1 || x == width() - 1) {
-                // do nothing since we are already at the bottom
+                } else if (y == 0) {
+                    visit(x + 1, y, results, mode);
+                    visit(x + 1, y + 1, results, mode);
 
-            } else if (x == 0) {
-                visit(x, y + 1, results);
-                visit(x + 1, y + 1, results);
+                } else {
+                    visit(x + 1, y - 1, results, mode);
+                    visit(x + 1, y, results, mode);
+                    visit(x + 1, y + 1, results, mode);
+                }
 
-            } else {
-                visit(x - 1, y + 1, results);
-                visit(x, y + 1, results);
-                visit(x + 1, y + 1, results);
+            } else if (mode == 1) { // vertical topological sort order
+                //visit all
+                if (y == height() - 1 || x == width() - 1) {
+                    // do nothing since we are already at the bottom
+
+                } else if (x == 0) {
+                    visit(x, y + 1, results, mode);
+                    visit(x + 1, y + 1, results, mode);
+
+                } else {
+                    visit(x - 1, y + 1, results, mode);
+                    visit(x, y + 1, results, mode);
+                    visit(x + 1, y + 1, results, mode);
+                }
             }
 
             marked[x][y] = 2;
@@ -105,9 +120,9 @@ public class SeamCarver {
         pic = picture;
 
         energies = new double[pic.width()][pic.height()];
-        marked = new int [pic.width()][pic.height()];
-        edgeTo = new int [pic.width()][pic.height()];
-        distTo = new double [pic.width()][pic.height()];
+        marked = new int[pic.width()][pic.height()];
+        edgeTo = new int[pic.width()][pic.height()];
+        distTo = new double[pic.width()][pic.height()];
 
         prepareForMode(0); //set up with horizontal first
     }
@@ -197,37 +212,33 @@ public class SeamCarver {
 
     public int[] findHorizontalSeam()            // sequence of indices for horizontal seam
     {
-//        prepareForMode(0); //prepare for horizontal
-//        int[] columns = new int[width()];
-//        Stack<Node> results = this.getTopologicalOrder();
-//
-//        for (Node node : results) {
-//           // StdOut.printf("(%s, %s)\n", node.x, node.y);
-//            horizontalRelax(node);
-//        }
-//
-//
-//        for (int j = 0; j < height(); j++) {
-//            for (int i = 0; i < width(); i++) {
-//                System.out.printf("%s ", distTo[i][j]);
-//            }
-//
-//            System.out.printf("\n");
-//        }
-//
-//        StdOut.println();
-//
-//        for (int j = 0; j < height(); j++) {
-//            for (int i = 0; i < width(); i++) {
-//                System.out.printf("%s ", edgeTo[i][j]);
-//            }
-//
-//            System.out.printf("\n");
-//        }
-//
-//        // get the data out from 2-d array
-//        //todo
+        prepareForMode(0); //prepare for horizontal
+        int[] rows = new int[width()];
 
+        // this is a left-right topoligical sort
+        Stack<Node> results = this.getTopologicalOrder(0);
+        for (Node node : results) {
+            //StdOut.printf("(%s, %s)\n", node.x, node.y);
+            horizontalRelax(node);
+        }
+
+        for (int j = 0; j < height(); j++) {
+            for (int i = 0; i < width(); i++) {
+                System.out.printf("%s ", distTo[i][j]);
+            }
+
+            System.out.printf("\n");
+        }
+
+        StdOut.println();
+
+        for (int j = 0; j < height(); j++) {
+            for (int i = 0; i < width(); i++) {
+                System.out.printf("%s ", edgeTo[i][j]);
+            }
+
+            System.out.printf("\n");
+        }
 
         return null;
 
@@ -235,11 +246,11 @@ public class SeamCarver {
 
     public int[] findVerticalSeam()              // sequence of indices for vertical seam
     {
-        prepareForMode(1); //prepare for horizontal
+        prepareForMode(1); //prepare for vertical
         int[] columns = new int[height()];
 
-        //todo: this is top-down topological sort
-        Stack<Node> results = this.getTopologicalOrder();
+        //this is top-down topological sort
+        Stack<Node> results = this.getTopologicalOrder(1);
 
         for (Node node : results) {
             // StdOut.printf("(%s, %s)\n", node.x, node.y);
@@ -305,7 +316,8 @@ public class SeamCarver {
 
         SeamCarver sc = new SeamCarver(inputImg);
 
-        sc.findVerticalSeam();
+        //sc.findVerticalSeam();
+        sc.findHorizontalSeam();
 
         System.out.printf("Printing energy calculated for each pixel.\n");
 
