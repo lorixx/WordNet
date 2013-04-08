@@ -74,6 +74,32 @@ public class SeamCarver {
         }
     }
 
+    // set up the data for searching horizontal or vertical
+    // if mode == 0, then do horizontal
+    // else if mode == 1, do vertical
+    private void prepareForMode(int mode) {
+
+        for (int x = 0; x < pic.width(); x++) {
+            for (int y = 0; y < pic.height(); y++) {
+                energies[x][y] = energy(x, y);
+                marked[x][y] = 0;
+                edgeTo[x][y] = -1;
+                distTo[x][y] = Double.POSITIVE_INFINITY;
+
+                if (mode == 0) {  //set left most edge
+                    if (x == 0) {
+                        distTo[x][y] = EDGE_ENERGY;
+                        edgeTo[x][y] = y;
+                    }
+                } else if (mode == 1) { //set top most edge
+                    if (y == 0) {
+                        distTo[x][y] = EDGE_ENERGY;
+                        edgeTo[x][y] = x;
+                    }
+                }
+            }
+        }
+    }
 
     public SeamCarver(Picture picture) {
         pic = picture;
@@ -83,14 +109,7 @@ public class SeamCarver {
         edgeTo = new int [pic.width()][pic.height()];
         distTo = new double [pic.width()][pic.height()];
 
-        for (int x = 0; x < pic.width(); x++) {
-            for (int y = 0; y < pic.height(); y++) {
-                energies[x][y] = energy(x, y);
-                marked[x][y] = 0;
-                edgeTo[x][y] = 0;
-                distTo[x][y] = Double.POSITIVE_INFINITY;
-            }
-        }
+        prepareForMode(0); //set up with horizontal first
 
     }
 
@@ -137,15 +156,77 @@ public class SeamCarver {
         return red + blue + green;
     }
 
+    //todo
+    private void relax(Node n) {
+        int x = n.x;
+        int y = n.y;
+        if (y == height() - 1 || x == width() - 1) {
+            // do nothing since we are already at the bottom
+
+        } else if (x == 0) {
+            // handle two edges
+            if (distTo[x][y + 1] > distTo[x][y] + energies[x][y + 1]) {
+                distTo[x][y + 1] = distTo[x][y] + energies[x][y + 1];
+                edgeTo[x][y + 1] = y; //set the edge to for its end
+            }
+
+            if (distTo[x + 1][y + 1] > distTo[x][y] + energies[x + 1][y + 1]) {
+                distTo[x + 1][y + 1] = distTo[x][y] + energies[x + 1][y + 1];
+                edgeTo[x + 1][y + 1] = y; //set the edge to for its end
+            }
+
+        } else {
+            // handle three edges
+            if (distTo[x - 1][y + 1] > distTo[x][y] + energies[x - 1][y + 1]) {
+                distTo[x - 1][y + 1] = distTo[x][y] + energies[x - 1][y + 1];
+                edgeTo[x - 1][y + 1] = y; //set the edge to for its end
+            }
+
+            if (distTo[x][y + 1] > distTo[x][y] + energies[x][y + 1]) {
+                distTo[x][y + 1] = distTo[x][y] + energies[x][y + 1];
+                edgeTo[x][y + 1] = y; //set the edge to for its end
+            }
+
+            if (distTo[x + 1][y + 1] > distTo[x][y] + energies[x + 1][y + 1]) {
+                distTo[x + 1][y + 1] = distTo[x][y] + energies[x + 1][y + 1];
+                edgeTo[x + 1][y + 1] = y; //set the edge to for its end
+            }
+        }
+    }
+
     public int[] findHorizontalSeam()            // sequence of indices for horizontal seam
     {
-
-
+        prepareForMode(0); //prepare for horizontal
+        int[] columns = new int[width()];
         Stack<Node> results = this.getTopologicalOrder();
 
-        for (Node i : results) {
-            StdOut.printf("(%s, %s)\n", i.x, i.y);
+        for (Node node : results) {
+           // StdOut.printf("(%s, %s)\n", node.x, node.y);
+            relax(node);
         }
+
+
+//        for (int j = 0; j < height(); j++) {
+//            for (int i = 0; i < width(); i++) {
+//                System.out.printf("%s ", distTo[i][j]);
+//            }
+//
+//            System.out.printf("\n");
+//        }
+//
+//        StdOut.println();
+//
+//        for (int j = 0; j < height(); j++) {
+//            for (int i = 0; i < width(); i++) {
+//                System.out.printf("%s ", edgeTo[i][j]);
+//            }
+//
+//            System.out.printf("\n");
+//        }
+
+        // get the data out from 2-d array
+        //todo
+
 
         return null;
 
