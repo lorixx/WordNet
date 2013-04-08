@@ -110,7 +110,6 @@ public class SeamCarver {
         distTo = new double [pic.width()][pic.height()];
 
         prepareForMode(0); //set up with horizontal first
-
     }
 
     public Picture picture()                       // current picture
@@ -121,13 +120,11 @@ public class SeamCarver {
     public int width()                         // width of current picture
     {
         return pic.width();
-
     }
 
     public int height()                        // height of current picture
     {
         return pic.height();
-
     }
 
     public double energy(int x, int y)            // energy of pixel at column x and row y
@@ -156,8 +153,7 @@ public class SeamCarver {
         return red + blue + green;
     }
 
-    //todo
-    private void relax(Node n) {
+    private void verticalRelax(Node n) {
         int x = n.x;
         int y = n.y;
         if (y == height() - 1 || x == width() - 1) {
@@ -167,45 +163,90 @@ public class SeamCarver {
             // handle two edges
             if (distTo[x][y + 1] > distTo[x][y] + energies[x][y + 1]) {
                 distTo[x][y + 1] = distTo[x][y] + energies[x][y + 1];
-                edgeTo[x][y + 1] = y; //set the edge to for its end
+                edgeTo[x][y + 1] = x; //set the edge to for its end
             }
 
             if (distTo[x + 1][y + 1] > distTo[x][y] + energies[x + 1][y + 1]) {
                 distTo[x + 1][y + 1] = distTo[x][y] + energies[x + 1][y + 1];
-                edgeTo[x + 1][y + 1] = y; //set the edge to for its end
+                edgeTo[x + 1][y + 1] = x; //set the edge to for its end
             }
 
         } else {
             // handle three edges
             if (distTo[x - 1][y + 1] > distTo[x][y] + energies[x - 1][y + 1]) {
                 distTo[x - 1][y + 1] = distTo[x][y] + energies[x - 1][y + 1];
-                edgeTo[x - 1][y + 1] = y; //set the edge to for its end
+                edgeTo[x - 1][y + 1] = x; //set the edge to for its end
             }
 
             if (distTo[x][y + 1] > distTo[x][y] + energies[x][y + 1]) {
                 distTo[x][y + 1] = distTo[x][y] + energies[x][y + 1];
-                edgeTo[x][y + 1] = y; //set the edge to for its end
+                edgeTo[x][y + 1] = x; //set the edge to for its end
             }
 
             if (distTo[x + 1][y + 1] > distTo[x][y] + energies[x + 1][y + 1]) {
                 distTo[x + 1][y + 1] = distTo[x][y] + energies[x + 1][y + 1];
-                edgeTo[x + 1][y + 1] = y; //set the edge to for its end
+                edgeTo[x + 1][y + 1] = x; //set the edge to for its end
             }
         }
     }
 
+    //todo:
+    private void horizontalRelax(Node n) {
+
+    }
+
     public int[] findHorizontalSeam()            // sequence of indices for horizontal seam
     {
-        prepareForMode(0); //prepare for horizontal
-        int[] columns = new int[width()];
+//        prepareForMode(0); //prepare for horizontal
+//        int[] columns = new int[width()];
+//        Stack<Node> results = this.getTopologicalOrder();
+//
+//        for (Node node : results) {
+//           // StdOut.printf("(%s, %s)\n", node.x, node.y);
+//            horizontalRelax(node);
+//        }
+//
+//
+//        for (int j = 0; j < height(); j++) {
+//            for (int i = 0; i < width(); i++) {
+//                System.out.printf("%s ", distTo[i][j]);
+//            }
+//
+//            System.out.printf("\n");
+//        }
+//
+//        StdOut.println();
+//
+//        for (int j = 0; j < height(); j++) {
+//            for (int i = 0; i < width(); i++) {
+//                System.out.printf("%s ", edgeTo[i][j]);
+//            }
+//
+//            System.out.printf("\n");
+//        }
+//
+//        // get the data out from 2-d array
+//        //todo
+
+
+        return null;
+
+    }
+
+    public int[] findVerticalSeam()              // sequence of indices for vertical seam
+    {
+        prepareForMode(1); //prepare for horizontal
+        int[] columns = new int[height()];
+
+        //todo: this is top-down topological sort
         Stack<Node> results = this.getTopologicalOrder();
 
         for (Node node : results) {
-           // StdOut.printf("(%s, %s)\n", node.x, node.y);
-            relax(node);
+            // StdOut.printf("(%s, %s)\n", node.x, node.y);
+            verticalRelax(node);
         }
-
-
+//
+//
 //        for (int j = 0; j < height(); j++) {
 //            for (int i = 0; i < width(); i++) {
 //                System.out.printf("%s ", distTo[i][j]);
@@ -224,17 +265,26 @@ public class SeamCarver {
 //            System.out.printf("\n");
 //        }
 
-        // get the data out from 2-d array
-        //todo
+        double min = distTo[0][height() - 1];
+        int index = 0;
+        for (int i = 0; i < width(); i++) {
+            if (min > distTo[i][height() - 1]) {
+                min = distTo[i][height() - 1];
+                index = i;
+            }
+        }
 
+        columns[height() - 1] = index;
 
-        return null;
+        for (int j = height() - 2; j >= 0; j--) {
+            columns[j] = edgeTo[index][j + 1];
+            index = edgeTo[index][j + 1];
+        }
 
-    }
+//        for (int k : columns)
+//            StdOut.println(k);
 
-    public int[] findVerticalSeam()              // sequence of indices for vertical seam
-    {
-        return null;
+        return columns;
 
     }
 
@@ -255,7 +305,7 @@ public class SeamCarver {
 
         SeamCarver sc = new SeamCarver(inputImg);
 
-        sc.findHorizontalSeam();
+        sc.findVerticalSeam();
 
         System.out.printf("Printing energy calculated for each pixel.\n");
 
