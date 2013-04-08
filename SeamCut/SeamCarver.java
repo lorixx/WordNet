@@ -14,6 +14,8 @@ public class SeamCarver {
 
     private int[][] marked; // 0: unmarked, 1: temporarily marked, 2: permanently marked
 
+    private Node [][] nodes;
+
     public SeamCarver(Picture picture) {
         pic = picture;
 
@@ -22,7 +24,15 @@ public class SeamCarver {
         edgeTo = new int[pic.width()][pic.height()];
         distTo = new double[pic.width()][pic.height()];
 
-        prepareForMode(0); //set up with horizontal first
+        // init the node array
+        nodes = new Node[pic.width()][pic.height()];
+        for (int i = 0; i < height(); i++) {
+            for (int j = 0; j < width(); j++) {
+                nodes[j][i] = new Node(j, i);
+            }
+        }
+
+        //prepareForMode(0); //set up with horizontal first
     }
 
     public Picture picture()                       // current picture
@@ -83,10 +93,6 @@ public class SeamCarver {
         for (int j = width() - 2; j >= 0; j--) {
             rows[j] = edgeTo[j + 1][index];
             index = edgeTo[j + 1][index];
-        }
-
-        for (int k : rows) {
-            StdOut.println(k);
         }
 
         return rows;
@@ -201,19 +207,12 @@ public class SeamCarver {
 
     private Stack<Node> getTopologicalOrder(int mode) {
 
-        Queue<Node> nodes = new Queue<Node>();
         Stack<Node> results = new Stack<Node>();
         for (int x = 0; x < pic.width(); x++) {
             for (int y = 0; y < pic.height(); y++) {
-                nodes.enqueue(new Node(x, y));
+                visit(x, y, results, mode);
             }
         }
-
-        while (!nodes.isEmpty()) {
-            Node currentNode = nodes.dequeue();
-            visit(currentNode.x, currentNode.y, results, mode);
-        }
-
         return results;
     }
 
@@ -222,7 +221,6 @@ public class SeamCarver {
 
         if (marked[x][y] == 1) {
             StdOut.println("This is not a DAG.");
-            return;
         } else if (marked[x][y] == 0) {
             marked[x][y] = 1;
 
@@ -257,7 +255,7 @@ public class SeamCarver {
             }
 
             marked[x][y] = 2;
-            results.push(new Node(x, y));
+            results.push(nodes[x][y]);
         }
     }
 
