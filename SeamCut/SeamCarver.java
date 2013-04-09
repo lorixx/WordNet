@@ -14,8 +14,6 @@ public class SeamCarver {
 
     private int[][] marked; // 0: unmarked, 1: temporarily marked, 2: permanently marked
 
-    private Node [][] nodes;
-
     public SeamCarver(Picture picture) {
         pic = picture;
 
@@ -23,16 +21,6 @@ public class SeamCarver {
         marked = new int[pic.width()][pic.height()];
         edgeTo = new int[pic.width()][pic.height()];
         distTo = new double[pic.width()][pic.height()];
-
-        // init the node array
-        nodes = new Node[pic.width()][pic.height()];
-        for (int i = 0; i < height(); i++) {
-            for (int j = 0; j < width(); j++) {
-                nodes[j][i] = new Node(j, i);
-            }
-        }
-
-        //prepareForMode(0); //set up with horizontal first
     }
 
     public Picture picture()                       // current picture
@@ -74,9 +62,10 @@ public class SeamCarver {
         int[] rows = new int[width()];
 
         // this is a left-right topological sort
-        Stack<Node> results = this.getTopologicalOrder(0);
-        for (Node node : results) {
-            horizontalRelax(node);
+        for (int j = 0; j < height(); j++) {
+            for (int i = 0; i < width(); i++) {
+                horizontalRelax(i, j);
+            }
         }
 
         double min = distTo[width() - 1][0];
@@ -105,11 +94,11 @@ public class SeamCarver {
         prepareForMode(1); //prepare for vertical
         int[] columns = new int[height()];
 
-        //this is top-down topological sort
-        Stack<Node> results = this.getTopologicalOrder(1);
-
-        for (Node node : results) {
-            verticalRelax(node);
+        // this is a top-down topological sort
+        for (int i = 0; i < width(); i++) {
+            for (int j = 0; j < height(); j++) {
+                verticalRelax(i, j);
+            }
         }
 
         double min = distTo[0][height() - 1];
@@ -195,70 +184,6 @@ public class SeamCarver {
         this.pic = picture;
     }
 
-    private class Node {
-        int x;
-        int y;
-
-        public Node(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    private Stack<Node> getTopologicalOrder(int mode) {
-
-        Stack<Node> results = new Stack<Node>();
-        for (int x = 0; x < pic.width(); x++) {
-            for (int y = 0; y < pic.height(); y++) {
-                visit(x, y, results, mode);
-            }
-        }
-        return results;
-    }
-
-    // not efficient yet since we create new nodes
-    private void visit(int x, int y, Stack<Node> results, int mode) {
-
-        if (marked[x][y] == 1) {
-            StdOut.println("This is not a DAG.");
-        } else if (marked[x][y] == 0) {
-            marked[x][y] = 1;
-
-            if (mode == 0) {
-                if (y == height() - 1 || x == width() - 1) {
-                    // do nothing since we are already at the bottom
-
-                } else if (y == 0) {
-                    visit(x + 1, y, results, mode);
-                    visit(x + 1, y + 1, results, mode);
-
-                } else {
-                    visit(x + 1, y - 1, results, mode);
-                    visit(x + 1, y, results, mode);
-                    visit(x + 1, y + 1, results, mode);
-                }
-
-            } else if (mode == 1) { // vertical topological sort order
-                //visit all
-                if (y == height() - 1 || x == width() - 1) {
-                    // do nothing since we are already at the bottom
-
-                } else if (x == 0) {
-                    visit(x, y + 1, results, mode);
-                    visit(x + 1, y + 1, results, mode);
-
-                } else {
-                    visit(x - 1, y + 1, results, mode);
-                    visit(x, y + 1, results, mode);
-                    visit(x + 1, y + 1, results, mode);
-                }
-            }
-
-            marked[x][y] = 2;
-            results.push(nodes[x][y]);
-        }
-    }
-
     // set up the data for searching horizontal or vertical
     // if mode == 0, then do horizontal
     // else if mode == 1, do vertical
@@ -294,9 +219,7 @@ public class SeamCarver {
         return red + blue + green;
     }
 
-    private void verticalRelax(Node n) {
-        int x = n.x;
-        int y = n.y;
+    private void verticalRelax(int x, int y) {
         if (y == height() - 1 || x == width() - 1) {
             // do nothing since we are already at the bottom
 
@@ -331,9 +254,8 @@ public class SeamCarver {
         }
     }
 
-    private void horizontalRelax(Node n) {
-        int x = n.x;
-        int y = n.y;
+    private void horizontalRelax(int x, int y) {
+
         if (y == height() - 1 || x == width() - 1) {
             // do nothing since we are already at the bottom
 
