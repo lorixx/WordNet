@@ -69,27 +69,45 @@ public class SeamCarver {
     public int[] findHorizontalSeam()            // sequence of indices for horizontal seam
     {
         int[] rows = new int[width()];
+        double[] oldDist = new double[height()];
+        for (int column = 0; column < width(); column++) {
 
+            double[] distTo = new double[height()];
+            for (int row = 0; row < height(); row++) {
 
+                horizontalVisit(column, row, distTo, oldDist);
 
+            }
+            oldDist = distTo;
+        }
+
+        double minDist = oldDist[0];
+        int bestIndex = 0;
+        for (int index = 0; index < height(); index++) {
+            if (oldDist[index] < minDist) {
+                minDist = oldDist[index];
+                bestIndex = index;
+            }
+        }
+
+        rows[width() - 1] = bestIndex;
+
+        for (int j = width() - 2; j >= 0; j--) {
+            rows[j] = parent[j + 1][bestIndex];
+            bestIndex = parent[j + 1][bestIndex];
+        }
+
+//        for (int i : rows)
+//            StdOut.printf("%d  ", i);
+//
+//        StdOut.println();
 
         return rows;
-    }
-
-    private double min(double a, double b, double c) {
-        double min = Math.min(a, b);
-
-        if (min < b)
-            min = Math.min(a, c);
-        else
-            min = Math.min(b, c);
-        return min;
     }
 
     public int[] findVerticalSeam()              // sequence of indices for vertical seam
     {
         int[] columns = new int[height()];
-
         double[] oldDist = new double[width()];
 
         for (int row = 0; row < height(); row++) {
@@ -99,71 +117,14 @@ public class SeamCarver {
             for (int column = 0; column < width(); column++) {
 
                 //visiting each vertex in topological order
-
-                if (row == 0) {
-                    distTo[column] = EDGE_ENERGY;
-                    parent[column][row] = -1;
-                } else {
-                    if (column == 0) {
-                        // 2 edges
-                        distTo[column] = Math.min(oldDist[0], oldDist[1]) + energy(column, row);
-                        if (Math.min(oldDist[0], oldDist[1]) < oldDist[1])
-                            parent[column][row] = 0;
-                        else
-                            parent[column][row] = 1;
-
-                    } else if (column == width() - 1) {
-                        // 2 edges
-                        distTo[column] = Math.min(oldDist[column], oldDist[column - 1]) + energy(column, row);
-                        if (Math.min(oldDist[column], oldDist[column - 1]) < oldDist[column - 1])
-                            parent[column][row] = column;
-                        else
-                            parent[column][row] = column - 1;
-                    } else {
-                        // 3 edges
-                        Double left = oldDist[column - 1];
-                        Double mid = oldDist[column];
-                        Double right = oldDist[column + 1];
-
-                        //double min = min(left, mid, right);
-
-
-                        double min = Math.min(left, mid);
-
-                        if (min < mid) {
-                            min = Math.min(left, right);
-
-                            if (min < right) {
-                                //left
-                                parent[column][row] = column - 1;
-                            } else
-                                // right
-                                parent[column][row] = column + 1;
-
-
-                        } else {
-                            min = Math.min(mid, right);
-
-                            if (min < right) {
-                                //mid
-                                parent[column][row] = column;
-
-                            } else
-                            // right
-                                parent[column][row] = column + 1;
-                        }
-
-                        distTo[column] = min + energy(column, row);
-
-                    }
-                }
+                verticalVisit(column, row, distTo, oldDist);
             }
 
             oldDist = distTo;
-            for (double i : oldDist) {
-                StdOut.printf("%f  ", i);
-            }
-            StdOut.println();
+//            for (double i : oldDist) {
+//                StdOut.printf("%f  ", i);
+//            }
+//            StdOut.println();
         }
 
         double minDist = oldDist[0];
@@ -181,18 +142,18 @@ public class SeamCarver {
             columns[j] = parent[bestIndex][j + 1];
             bestIndex = parent[bestIndex][j + 1];
         }
+//
+//        for (int i = 0; i < height(); i++) {
+//            for (int j = 0; j < width(); j++) {
+//                StdOut.printf("%d  ", parent[j][i]);
+//            }
+//            StdOut.println();
+//        }
 
-        for (int i = 0; i < height(); i++) {
-            for (int j = 0; j < width(); j++) {
-                StdOut.printf("%d  ", parent[j][i]);
-            }
-            StdOut.println();
-        }
-
-        for (int i : columns)
-            StdOut.println(i);
-
-        StdOut.println();
+//        for (int i : columns)
+//            StdOut.printf("%d  ", i);
+//
+//        StdOut.println();
 
 
         return columns;
@@ -262,6 +223,95 @@ public class SeamCarver {
         this.pic = picture;
     }
 
+    private double min(double a, double b, double c) {
+        double min = Math.min(a, b);
+
+        if (min < b)
+            min = Math.min(a, c);
+        else
+            min = Math.min(b, c);
+        return min;
+    }
+
+    private void horizontalVisit(int column, int row, double[] distTo, double[] oldDist) {
+
+        if (column == 0) {
+            distTo[row] = EDGE_ENERGY;
+            parent[column][row] = -1;
+        } else {
+
+            if (row == 0) {
+                // 2 edges
+                distTo[row] = Math.min(oldDist[0], oldDist[1]) + energy(column, row);
+                if (Math.min(oldDist[0], oldDist[1]) < oldDist[1])
+                    parent[column][row] = 0;
+                else
+                    parent[column][row] = 1;
+            } else if (row == height() - 1) {
+                // 2 edges
+                distTo[row] = Math.min(oldDist[row - 1], oldDist[row]) + energy(column, row);
+                if (Math.min(oldDist[row - 1], oldDist[row]) < oldDist[row])
+                    parent[column][row] = row - 1;
+                else
+                    parent[column][row] = row;
+            } else {
+                // 3 edges
+                Double top = oldDist[row - 1];
+                Double mid = oldDist[row];
+                Double bottom = oldDist[row + 1];
+
+                double min = min(top, mid, bottom);
+                distTo[row] = min + energy(column, row);
+                if (min == top) {
+                    parent[column][row] = row - 1;
+                } else if (min == mid) {
+                    parent[column][row] = row;
+                } else
+                    parent[column][row] = row + 1;
+
+            }
+        }
+    }
+
+    private void verticalVisit(int column, int row, double[] distTo, double[] oldDist) {
+        if (row == 0) {
+            distTo[column] = EDGE_ENERGY;
+            parent[column][row] = -1;
+        } else {
+            if (column == 0) {
+                // 2 edges
+                distTo[column] = Math.min(oldDist[0], oldDist[1]) + energy(column, row);
+                if (Math.min(oldDist[0], oldDist[1]) < oldDist[1])
+                    parent[column][row] = 0;
+                else
+                    parent[column][row] = 1;
+
+            } else if (column == width() - 1) {
+                // 2 edges
+                distTo[column] = Math.min(oldDist[column], oldDist[column - 1]) + energy(column, row);
+                if (Math.min(oldDist[column], oldDist[column - 1]) < oldDist[column - 1])
+                    parent[column][row] = column;
+                else
+                    parent[column][row] = column - 1;
+            } else {
+                // 3 edges
+                Double left = oldDist[column - 1];
+                Double mid = oldDist[column];
+                Double right = oldDist[column + 1];
+
+                double min = min(left, mid, right);
+                distTo[column] = min + energy(column, row);
+                if (min == left) {
+                    parent[column][row] = column - 1;
+                } else if (min == mid) {
+                    parent[column][row] = column;
+                } else
+                    parent[column][row] = column + 1;
+
+            }
+        }
+    }
+
 
     private int calculateEnergyForTwoColor(Color a, Color b) {
         int red = (int) Math.pow(a.getRed() - b.getRed(), 2);
@@ -280,8 +330,8 @@ public class SeamCarver {
 
         SeamCarver sc = new SeamCarver(inputImg);
 
-        sc.findVerticalSeam();
-        //sc.findHorizontalSeam();
+        //sc.findVerticalSeam();
+        sc.findHorizontalSeam();
 
         System.out.printf("Printing energy calculated for each pixel.\n");
 
