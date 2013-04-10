@@ -8,6 +8,8 @@ public class SeamCarver {
 
     private double[][] energies;
 
+    private int[][]parent;
+
     public SeamCarver(Picture picture) {
 
         setPicture(picture);
@@ -22,13 +24,13 @@ public class SeamCarver {
         pic = picture;
 
         energies = new double[pic.width()][pic.height()];
-
+        parent = new int[pic.width()][pic.height()];
         for (int row = 0; row < height(); row++) {
             for (int column = 0; column < width(); column++) {
                 energies[column][row] = energy(column, row);
+                parent[column][row] = -1;
             }
         }
-
     }
 
     public Picture picture()                       // current picture
@@ -68,25 +70,129 @@ public class SeamCarver {
     {
         int[] rows = new int[width()];
 
-        int bestRow = 0;
-        int minEnergies = 0;
 
-        for (int row = 0; row < height(); row++) {
-
-            int totalEnergies = 0;
-            for (int column = 0; column < width(); column++) {
-
-            }
-        }
 
 
         return rows;
+    }
+
+    private double min(double a, double b, double c) {
+        double min = Math.min(a, b);
+
+        if (min < b)
+            min = Math.min(a, c);
+        else
+            min = Math.min(b, c);
+        return min;
     }
 
     public int[] findVerticalSeam()              // sequence of indices for vertical seam
     {
         int[] columns = new int[height()];
 
+        double[] oldDist = new double[width()];
+
+        for (int row = 0; row < height(); row++) {
+
+            double[] distTo = new double[width()];
+
+            for (int column = 0; column < width(); column++) {
+
+                //visiting each vertex in topological order
+
+                if (row == 0) {
+                    distTo[column] = EDGE_ENERGY;
+                    parent[column][row] = -1;
+                } else {
+                    if (column == 0) {
+                        // 2 edges
+                        distTo[column] = Math.min(oldDist[0], oldDist[1]) + energy(column, row);
+                        if (Math.min(oldDist[0], oldDist[1]) < oldDist[1])
+                            parent[column][row] = 0;
+                        else
+                            parent[column][row] = 1;
+
+                    } else if (column == width() - 1) {
+                        // 2 edges
+                        distTo[column] = Math.min(oldDist[column], oldDist[column - 1]) + energy(column, row);
+                        if (Math.min(oldDist[column], oldDist[column - 1]) < oldDist[column - 1])
+                            parent[column][row] = column;
+                        else
+                            parent[column][row] = column - 1;
+                    } else {
+                        // 3 edges
+                        Double left = oldDist[column - 1];
+                        Double mid = oldDist[column];
+                        Double right = oldDist[column + 1];
+
+                        //double min = min(left, mid, right);
+
+
+                        double min = Math.min(left, mid);
+
+                        if (min < mid) {
+                            min = Math.min(left, right);
+
+                            if (min < right) {
+                                //left
+                                parent[column][row] = column - 1;
+                            } else
+                                // right
+                                parent[column][row] = column + 1;
+
+
+                        } else {
+                            min = Math.min(mid, right);
+
+                            if (min < right) {
+                                //mid
+                                parent[column][row] = column;
+
+                            } else
+                            // right
+                                parent[column][row] = column + 1;
+                        }
+
+                        distTo[column] = min + energy(column, row);
+
+                    }
+                }
+            }
+
+            oldDist = distTo;
+            for (double i : oldDist) {
+                StdOut.printf("%f  ", i);
+            }
+            StdOut.println();
+        }
+
+        double minDist = oldDist[0];
+        int bestIndex = 0;
+        for (int index = 0; index < width(); index++) {
+            if (oldDist[index] < minDist) {
+                minDist = oldDist[index];
+                bestIndex = index;
+            }
+        }
+
+        columns[height() - 1] = bestIndex;
+
+        for (int j = height() - 2; j >= 0; j--) {
+            columns[j] = parent[bestIndex][j + 1];
+            bestIndex = parent[bestIndex][j + 1];
+        }
+
+        for (int i = 0; i < height(); i++) {
+            for (int j = 0; j < width(); j++) {
+                StdOut.printf("%d  ", parent[j][i]);
+            }
+            StdOut.println();
+        }
+
+        for (int i : columns)
+            StdOut.println(i);
+
+        StdOut.println();
 
 
         return columns;
@@ -175,7 +281,7 @@ public class SeamCarver {
         SeamCarver sc = new SeamCarver(inputImg);
 
         sc.findVerticalSeam();
-        sc.findHorizontalSeam();
+        //sc.findHorizontalSeam();
 
         System.out.printf("Printing energy calculated for each pixel.\n");
 
