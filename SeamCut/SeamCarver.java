@@ -8,19 +8,27 @@ public class SeamCarver {
 
     private double[][] energies;
 
-    private double[][] distTo; // calculate distTo for all, might from top-down or left-right
-
-    private int[][] edgeTo; // calculate edgeTo either from top-down or left-right
-
-    private int[][] marked; // 0: unmarked, 1: temporarily marked, 2: permanently marked
-
     public SeamCarver(Picture picture) {
+
+        setPicture(picture);
+    }
+
+    /**
+     * Helper method for setting picture
+     * It will re-create the energies array
+     * @param picture
+     */
+    private void setPicture(Picture picture) {
         pic = picture;
 
         energies = new double[pic.width()][pic.height()];
-        marked = new int[pic.width()][pic.height()];
-        edgeTo = new int[pic.width()][pic.height()];
-        distTo = new double[pic.width()][pic.height()];
+
+        for (int row = 0; row < height(); row++) {
+            for (int column = 0; column < width(); column++) {
+                energies[column][row] = energy(column, row);
+            }
+        }
+
     }
 
     public Picture picture()                       // current picture
@@ -58,64 +66,28 @@ public class SeamCarver {
 
     public int[] findHorizontalSeam()            // sequence of indices for horizontal seam
     {
-        prepareForMode(0); //prepare for horizontal
         int[] rows = new int[width()];
 
-        // this is a left-right topological sort
-        for (int j = 0; j < height(); j++) {
-            for (int i = 0; i < width(); i++) {
-                horizontalRelax(i, j);
+        int bestRow = 0;
+        int minEnergies = 0;
+
+        for (int row = 0; row < height(); row++) {
+
+            int totalEnergies = 0;
+            for (int column = 0; column < width(); column++) {
+
             }
         }
 
-        double min = distTo[width() - 1][0];
-        int index = 0;
-        for (int i = 0; i < height(); i++) {
-            if (min > distTo[width() - 1][i]) {
-                min = distTo[width() - 1][i];
-                index = i;
-            }
-        }
-
-        rows[width() - 1] = index;
-
-        for (int j = width() - 2; j >= 0; j--) {
-            rows[j] = edgeTo[j + 1][index];
-            index = edgeTo[j + 1][index];
-        }
 
         return rows;
-
-
     }
 
     public int[] findVerticalSeam()              // sequence of indices for vertical seam
     {
-        prepareForMode(1); //prepare for vertical
         int[] columns = new int[height()];
 
-        // this is a top-down topological sort
-        for (int i = 0; i < width(); i++) {
-            for (int j = 0; j < height(); j++) {
-                verticalRelax(i, j);
-            }
-        }
 
-        double min = distTo[0][height() - 1];
-        int index = 0;
-        for (int i = 0; i < width(); i++) {
-            if (min > distTo[i][height() - 1]) {
-                min = distTo[i][height() - 1];
-                index = i;
-            }
-        }
-
-        columns[height() - 1] = index;
-
-        for (int j = height() - 2; j >= 0; j--) {
-            columns[j] = edgeTo[index][j + 1];
-            index = edgeTo[index][j + 1];
-        }
 
         return columns;
     }
@@ -184,32 +156,6 @@ public class SeamCarver {
         this.pic = picture;
     }
 
-    // set up the data for searching horizontal or vertical
-    // if mode == 0, then do horizontal
-    // else if mode == 1, do vertical
-    private void prepareForMode(int mode) {
-
-        for (int x = 0; x < pic.width(); x++) {
-            for (int y = 0; y < pic.height(); y++) {
-                energies[x][y] = energy(x, y);
-                marked[x][y] = 0;
-                edgeTo[x][y] = -1;
-                distTo[x][y] = Double.POSITIVE_INFINITY;
-
-                if (mode == 0) {  //set left most edge
-                    if (x == 0) {
-                        distTo[x][y] = EDGE_ENERGY;
-                        edgeTo[x][y] = y;
-                    }
-                } else if (mode == 1) { //set top most edge
-                    if (y == 0) {
-                        distTo[x][y] = EDGE_ENERGY;
-                        edgeTo[x][y] = x;
-                    }
-                }
-            }
-        }
-    }
 
     private int calculateEnergyForTwoColor(Color a, Color b) {
         int red = (int) Math.pow(a.getRed() - b.getRed(), 2);
@@ -219,76 +165,7 @@ public class SeamCarver {
         return red + blue + green;
     }
 
-    private void verticalRelax(int x, int y) {
-        if (y == height() - 1 || x == width() - 1) {
-            // do nothing since we are already at the bottom
 
-        } else if (x == 0) {
-            // handle two edges
-            if (distTo[x][y + 1] > distTo[x][y] + energies[x][y + 1]) {
-                distTo[x][y + 1] = distTo[x][y] + energies[x][y + 1];
-                edgeTo[x][y + 1] = x; //set the edge to for its end
-            }
-
-            if (distTo[x + 1][y + 1] > distTo[x][y] + energies[x + 1][y + 1]) {
-                distTo[x + 1][y + 1] = distTo[x][y] + energies[x + 1][y + 1];
-                edgeTo[x + 1][y + 1] = x; //set the edge to for its end
-            }
-
-        } else {
-            // handle three edges
-            if (distTo[x - 1][y + 1] > distTo[x][y] + energies[x - 1][y + 1]) {
-                distTo[x - 1][y + 1] = distTo[x][y] + energies[x - 1][y + 1];
-                edgeTo[x - 1][y + 1] = x; //set the edge to for its end
-            }
-
-            if (distTo[x][y + 1] > distTo[x][y] + energies[x][y + 1]) {
-                distTo[x][y + 1] = distTo[x][y] + energies[x][y + 1];
-                edgeTo[x][y + 1] = x; //set the edge to for its end
-            }
-
-            if (distTo[x + 1][y + 1] > distTo[x][y] + energies[x + 1][y + 1]) {
-                distTo[x + 1][y + 1] = distTo[x][y] + energies[x + 1][y + 1];
-                edgeTo[x + 1][y + 1] = x; //set the edge to for its end
-            }
-        }
-    }
-
-    private void horizontalRelax(int x, int y) {
-
-        if (y == height() - 1 || x == width() - 1) {
-            // do nothing since we are already at the bottom
-
-        } else if (y == 0) {
-            // handle two edges
-            if (distTo[x + 1][y] > distTo[x][y] + energies[x + 1][y]) {
-                distTo[x + 1][y] = distTo[x][y] + energies[x + 1][y];
-                edgeTo[x + 1][y] = y; //set the edge to for its end
-            }
-
-            if (distTo[x + 1][y + 1] > distTo[x][y] + energies[x + 1][y + 1]) {
-                distTo[x + 1][y + 1] = distTo[x][y] + energies[x + 1][y + 1];
-                edgeTo[x + 1][y + 1] = y; //set the edge to for its end
-            }
-
-        } else {
-            // handle three edges
-            if (distTo[x + 1][y - 1] > distTo[x][y] + energies[x + 1][y - 1]) {
-                distTo[x + 1][y - 1] = distTo[x][y] + energies[x + 1][y - 1];
-                edgeTo[x + 1][y - 1] = y; //set the edge to for its end
-            }
-
-            if (distTo[x + 1][y] > distTo[x][y] + energies[x + 1][y]) {
-                distTo[x + 1][y] = distTo[x][y] + energies[x + 1][y];
-                edgeTo[x + 1][y] = y; //set the edge to for its end
-            }
-
-            if (distTo[x + 1][y + 1] > distTo[x][y] + energies[x + 1][y + 1]) {
-                distTo[x + 1][y + 1] = distTo[x][y] + energies[x + 1][y + 1];
-                edgeTo[x + 1][y + 1] = y; //set the edge to for its end
-            }
-        }
-    }
 
     public static void main(String[] args) {
 
