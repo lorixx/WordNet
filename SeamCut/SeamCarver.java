@@ -68,17 +68,21 @@ public class SeamCarver {
 
     public int[] findHorizontalSeam()            // sequence of indices for horizontal seam
     {
+        Stopwatch sw = new Stopwatch();
         int[] rows = new int[width()];
         double[] oldDist = new double[height()];
+        double[] distTo = new double[height()];
+
         for (int column = 0; column < width(); column++) {
 
-            double[] distTo = new double[height()];
             for (int row = 0; row < height(); row++) {
 
                 horizontalVisit(column, row, distTo, oldDist);
 
             }
-            oldDist = distTo;
+
+            System.arraycopy(distTo, 0, oldDist, 0, height());
+            //oldDist = distTo;
         }
 
         double minDist = oldDist[0];
@@ -101,18 +105,20 @@ public class SeamCarver {
 //            StdOut.printf("%d  ", i);
 //
 //        StdOut.println();
-
+        System.out.println("Find a horizontal seam takes time: " + sw.elapsedTime() + " seconds.");
         return rows;
     }
 
     public int[] findVerticalSeam()              // sequence of indices for vertical seam
     {
+        Stopwatch sw = new Stopwatch();
+
         int[] columns = new int[height()];
         double[] oldDist = new double[width()];
-
+        double[] distTo = new double[width()];
         for (int row = 0; row < height(); row++) {
 
-            double[] distTo = new double[width()];
+
 
             for (int column = 0; column < width(); column++) {
 
@@ -120,7 +126,9 @@ public class SeamCarver {
                 verticalVisit(column, row, distTo, oldDist);
             }
 
-            oldDist = distTo;
+            System.arraycopy(distTo, 0, oldDist, 0, width());
+
+            //oldDist = distTo;
 //            for (double i : oldDist) {
 //                StdOut.printf("%f  ", i);
 //            }
@@ -155,6 +163,7 @@ public class SeamCarver {
 //
 //        StdOut.println();
 
+        System.out.println("Find a vertical seam takes time: " + sw.elapsedTime() + " seconds.");
 
         return columns;
     }
@@ -189,6 +198,27 @@ public class SeamCarver {
         }
 
         this.pic = picture;
+
+        double[][] oldEnergies = energies;
+        energies = new double[width()][height()];
+
+        for (int column = 0; column < width(); column++) {
+            for (int row = 0; row < height(); row++) {
+
+                // if the adjacent is changed
+                if (row == a[column] - 1 || row == a[column]) {
+                    energies[column][row] = energy(column, row);
+                } else {
+
+                    if (row > a[column]) // if it is passed the changed point
+                        energies[column][row] = oldEnergies[column][row + 1];
+                    else
+                        energies[column][row] = oldEnergies[column][row];
+                }
+            }
+        }
+
+
     }
 
     public void removeVerticalSeam(int[] a)     // remove vertical seam from picture
@@ -221,6 +251,26 @@ public class SeamCarver {
         }
 
         this.pic = picture;
+
+        // process the energies table
+        double[][] oldEnergies = energies;
+        energies = new double[width()][height()];
+
+        for (int row = 0; row < height(); row++) {
+            for (int column = 0; column < width(); column++) {
+
+                // if the adjacent is changed
+                if (column == a[row] - 1 || column == a[row]) {
+                    energies[column][row] = energy(column, row);
+                } else {
+
+                    if (column > a[row]) // if it is passed the changed point
+                        energies[column][row] = oldEnergies[column + 1][row];
+                    else
+                        energies[column][row] = oldEnergies[column][row];
+                }
+            }
+        }
     }
 
     private double min(double a, double b, double c) {
@@ -242,14 +292,14 @@ public class SeamCarver {
 
             if (row == 0) {
                 // 2 edges
-                distTo[row] = Math.min(oldDist[0], oldDist[1]) + energy(column, row);
+                distTo[row] = Math.min(oldDist[0], oldDist[1]) + energies[column][row];
                 if (Math.min(oldDist[0], oldDist[1]) < oldDist[1])
                     parent[column][row] = 0;
                 else
                     parent[column][row] = 1;
             } else if (row == height() - 1) {
                 // 2 edges
-                distTo[row] = Math.min(oldDist[row - 1], oldDist[row]) + energy(column, row);
+                distTo[row] = Math.min(oldDist[row - 1], oldDist[row]) + energies[column][row];
                 if (Math.min(oldDist[row - 1], oldDist[row]) < oldDist[row])
                     parent[column][row] = row - 1;
                 else
@@ -261,7 +311,7 @@ public class SeamCarver {
                 Double bottom = oldDist[row + 1];
 
                 double min = min(top, mid, bottom);
-                distTo[row] = min + energy(column, row);
+                distTo[row] = min + energies[column][row];
                 if (min == top) {
                     parent[column][row] = row - 1;
                 } else if (min == mid) {
@@ -274,13 +324,14 @@ public class SeamCarver {
     }
 
     private void verticalVisit(int column, int row, double[] distTo, double[] oldDist) {
+
         if (row == 0) {
             distTo[column] = EDGE_ENERGY;
             parent[column][row] = -1;
         } else {
             if (column == 0) {
                 // 2 edges
-                distTo[column] = Math.min(oldDist[0], oldDist[1]) + energy(column, row);
+                distTo[column] = Math.min(oldDist[0], oldDist[1]) + energies[column][row];
                 if (Math.min(oldDist[0], oldDist[1]) < oldDist[1])
                     parent[column][row] = 0;
                 else
@@ -288,7 +339,7 @@ public class SeamCarver {
 
             } else if (column == width() - 1) {
                 // 2 edges
-                distTo[column] = Math.min(oldDist[column], oldDist[column - 1]) + energy(column, row);
+                distTo[column] = Math.min(oldDist[column], oldDist[column - 1]) + energies[column][row];
                 if (Math.min(oldDist[column], oldDist[column - 1]) < oldDist[column - 1])
                     parent[column][row] = column;
                 else
@@ -300,7 +351,7 @@ public class SeamCarver {
                 Double right = oldDist[column + 1];
 
                 double min = min(left, mid, right);
-                distTo[column] = min + energy(column, row);
+                distTo[column] = min + energies[column][row];
                 if (min == left) {
                     parent[column][row] = column - 1;
                 } else if (min == mid) {
@@ -331,15 +382,21 @@ public class SeamCarver {
         SeamCarver sc = new SeamCarver(inputImg);
 
         //sc.findVerticalSeam();
-        sc.findHorizontalSeam();
+        Stopwatch sw = new Stopwatch();
+        for (int i = 0; i < 50; i++)
+            sc.findHorizontalSeam();
+
+        System.out.println("Find 50 horizontal seams takes time: " + sw.elapsedTime() + " seconds.");
+
+
 
         System.out.printf("Printing energy calculated for each pixel.\n");
-
-        for (int j = 0; j < sc.height(); j++) {
-            for (int i = 0; i < sc.width(); i++) {
-                System.out.printf("%9.0f ", sc.energy(i, j));
-            }
-            System.out.println();
-        }
+//
+//        for (int j = 0; j < sc.height(); j++) {
+//            for (int i = 0; i < sc.width(); i++) {
+//                System.out.printf("%9.0f ", sc.energy(i, j));
+//            }
+//            System.out.println();
+//        }
     }
 }
