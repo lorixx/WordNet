@@ -10,6 +10,11 @@ public class SeamCarver {
 
     private int[][]parent;
 
+    /**
+     * Constructor
+     * use to set private picture instance so that it is immutable
+     * @param picture
+     */
     public SeamCarver(Picture picture) {
 
         setPicture(picture);
@@ -48,7 +53,13 @@ public class SeamCarver {
         return pic.height();
     }
 
-    public double energy(int x, int y)            // energy of pixel at column x and row y
+    /**
+     * Calculate the energy for current position
+     * @param x: column
+     * @param y: row
+     * @return
+     */
+    public double energy(int x, int y)
     {
         if (x < 0 || y < 0 || x > width() - 1 || y > height() - 1) {
             throw new IndexOutOfBoundsException();
@@ -66,9 +77,16 @@ public class SeamCarver {
         return calculateEnergyForTwoColor(leftColor, rightColor) + calculateEnergyForTwoColor(topColor, bottomColor);
     }
 
-    public int[] findHorizontalSeam()            // sequence of indices for horizontal seam
+    /**
+     * Find the horizontal seam for the picture
+     *
+     * It loops through all the vertices in topological order(VERY important!)
+     * we keep track of each vertex's parent in parent[][] array.(noted it is global)
+     *
+     * @return
+     */
+    public int[] findHorizontalSeam()
     {
-        Stopwatch sw = new Stopwatch();
         int[] rows = new int[width()];
         double[] oldDist = new double[height()];
         double[] distTo = new double[height()];
@@ -80,9 +98,7 @@ public class SeamCarver {
                 horizontalVisit(column, row, distTo, oldDist);
 
             }
-
             System.arraycopy(distTo, 0, oldDist, 0, height());
-            //oldDist = distTo;
         }
 
         double minDist = oldDist[0];
@@ -95,30 +111,26 @@ public class SeamCarver {
         }
 
         rows[width() - 1] = bestIndex;
-
         for (int j = width() - 2; j >= 0; j--) {
             rows[j] = parent[j + 1][bestIndex];
             bestIndex = parent[j + 1][bestIndex];
         }
 
-//        for (int i : rows)
-//            StdOut.printf("%d  ", i);
-//
-//        StdOut.println();
-        System.out.println("Find a horizontal seam takes time: " + sw.elapsedTime() + " seconds.");
         return rows;
     }
 
+    /**
+     * use similar structure as finding horizontal seam, but this time
+     * we use different topological order since the arrays changed
+     *
+     * @return
+     */
     public int[] findVerticalSeam()              // sequence of indices for vertical seam
     {
-        Stopwatch sw = new Stopwatch();
-
         int[] columns = new int[height()];
         double[] oldDist = new double[width()];
         double[] distTo = new double[width()];
         for (int row = 0; row < height(); row++) {
-
-
 
             for (int column = 0; column < width(); column++) {
 
@@ -127,12 +139,6 @@ public class SeamCarver {
             }
 
             System.arraycopy(distTo, 0, oldDist, 0, width());
-
-            //oldDist = distTo;
-//            for (double i : oldDist) {
-//                StdOut.printf("%f  ", i);
-//            }
-//            StdOut.println();
         }
 
         double minDist = oldDist[0];
@@ -145,29 +151,21 @@ public class SeamCarver {
         }
 
         columns[height() - 1] = bestIndex;
-
         for (int j = height() - 2; j >= 0; j--) {
             columns[j] = parent[bestIndex][j + 1];
             bestIndex = parent[bestIndex][j + 1];
         }
-//
-//        for (int i = 0; i < height(); i++) {
-//            for (int j = 0; j < width(); j++) {
-//                StdOut.printf("%d  ", parent[j][i]);
-//            }
-//            StdOut.println();
-//        }
-
-//        for (int i : columns)
-//            StdOut.printf("%d  ", i);
-//
-//        StdOut.println();
-
-        System.out.println("Find a vertical seam takes time: " + sw.elapsedTime() + " seconds.");
 
         return columns;
     }
 
+    /**
+     * Create another picture after we remove a seam,
+     * noticed that we need to process the energies table as well.
+     * we only calculate necessary energies data for those changed ones.
+     *
+     * @param a
+     */
     public void removeHorizontalSeam(int[] a)   // remove horizontal seam from picture
     {
         if (width() <= 1 || height() <= 1) {
@@ -273,6 +271,14 @@ public class SeamCarver {
         }
     }
 
+    /**
+     * Find min among three double data
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @return
+     */
     private double min(double a, double b, double c) {
         double min = Math.min(a, b);
 
@@ -283,6 +289,16 @@ public class SeamCarver {
         return min;
     }
 
+    /**
+     *
+     * This is a horizontal visit. We need to take care of different edge cases
+     * Then populate the parent table and keep a 1-d array of distTo for reference.
+     *
+     * @param column
+     * @param row
+     * @param distTo
+     * @param oldDist
+     */
     private void horizontalVisit(int column, int row, double[] distTo, double[] oldDist) {
 
         if (column == 0) {
@@ -323,6 +339,14 @@ public class SeamCarver {
         }
     }
 
+    /**
+     * Similar to horizontal visit
+     *
+     * @param column
+     * @param row
+     * @param distTo
+     * @param oldDist
+     */
     private void verticalVisit(int column, int row, double[] distTo, double[] oldDist) {
 
         if (row == 0) {
@@ -363,7 +387,13 @@ public class SeamCarver {
         }
     }
 
-
+    /**
+     * Helper function for calculating energy for two colors
+     *
+     * @param a
+     * @param b
+     * @return
+     */
     private int calculateEnergyForTwoColor(Color a, Color b) {
         int red = (int) Math.pow(a.getRed() - b.getRed(), 2);
         int blue = (int) Math.pow(a.getBlue() - b.getBlue(), 2);
@@ -381,22 +411,16 @@ public class SeamCarver {
 
         SeamCarver sc = new SeamCarver(inputImg);
 
-        //sc.findVerticalSeam();
-        Stopwatch sw = new Stopwatch();
-        for (int i = 0; i < 50; i++)
-            sc.findHorizontalSeam();
-
-        System.out.println("Find 50 horizontal seams takes time: " + sw.elapsedTime() + " seconds.");
-
-
+        sc.findVerticalSeam();
+        sc.findHorizontalSeam();
 
         System.out.printf("Printing energy calculated for each pixel.\n");
-//
-//        for (int j = 0; j < sc.height(); j++) {
-//            for (int i = 0; i < sc.width(); i++) {
-//                System.out.printf("%9.0f ", sc.energy(i, j));
-//            }
-//            System.out.println();
-//        }
+
+        for (int j = 0; j < sc.height(); j++) {
+            for (int i = 0; i < sc.width(); i++) {
+                System.out.printf("%9.0f ", sc.energy(i, j));
+            }
+            System.out.println();
+        }
     }
 }
