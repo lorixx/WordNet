@@ -108,7 +108,10 @@ public class BaseballElimination {
                 }
             }
         }
-        if (eliminatedTeams.size() > 0) return true;
+        if (eliminatedTeams.size() > 0) {
+            StdOut.println("This is trivial.");
+            return true;
+        }
 
 
         int networkSize = 2 + (teams.size() - 1) + ((teams.size() - 2) * (teams.size() - 1) / 2);
@@ -131,21 +134,26 @@ public class BaseballElimination {
         }
 
         int indexForGames = restTeams.length;
+        int maxCapacity = 0;
         for (int i = 0; i < restTeams.length; i++) {
             for (int j = i + 1; j < restTeams.length; j++) {
                 String leftTeam = restTeams[i];
                 String rightTeam = restTeams[j];
 
-                fn.addEdge(new FlowEdge(sourceIndex, indexForGames, against(leftTeam, rightTeam)));
+                int currentAgainst = against(leftTeam, rightTeam);
+                maxCapacity += currentAgainst;
+                fn.addEdge(new FlowEdge(sourceIndex, indexForGames, currentAgainst));
                 fn.addEdge(new FlowEdge(indexForGames, i, Double.POSITIVE_INFINITY));
                 fn.addEdge(new FlowEdge(indexForGames, j, Double.POSITIVE_INFINITY));
                 indexForGames++;
             }
         }
 
-        StdOut.println(fn.toString());
 
+        FordFulkerson ff = new FordFulkerson(fn, sourceIndex, sinkIndex);
 
+        if (ff.value() < maxCapacity)
+            return true;
 
         return false;
     }
@@ -156,26 +164,85 @@ public class BaseballElimination {
         if (!st.contains(team))
             throw new IllegalArgumentException();
 
+        // trivial eliminated check
+        int targetIndex = st.get(team);
+        Queue<String> eliminatedTeams =  new Queue<String>();
+        for (int i = 0; i < teams.size(); i++) {
+            if (i != targetIndex) {
+                if (wins(team) + remaining(team) < wins[i]) {
+                    eliminatedTeams.enqueue(teamNames[i]);
+                }
+            }
+        }
+        if (eliminatedTeams.size() > 0) return eliminatedTeams;
 
-        return null;
+
+
+        int networkSize = 2 + (teams.size() - 1) + ((teams.size() - 2) * (teams.size() - 1) / 2);
+        int sourceIndex = networkSize - 2;
+        int sinkIndex = networkSize - 1;
+
+        FlowNetwork fn = new FlowNetwork(networkSize);
+
+        String[] restTeams = new String[teams.size() - 1];
+        for (int i = 0, j = 0; i < teams.size(); i++) {
+            if (teamNames[i].equals(team))
+                continue;
+            else {
+                restTeams[j] = teamNames[i];
+                fn.addEdge(new FlowEdge(j, sinkIndex, wins(team) + remaining(team) - wins(teamNames[i])));
+                j++; //update index for restTeam
+
+            }
+
+        }
+
+        int indexForGames = restTeams.length;
+        int maxCapacity = 0;
+        for (int i = 0; i < restTeams.length; i++) {
+            for (int j = i + 1; j < restTeams.length; j++) {
+                String leftTeam = restTeams[i];
+                String rightTeam = restTeams[j];
+
+                int currentAgainst = against(leftTeam, rightTeam);
+                maxCapacity += currentAgainst;
+                fn.addEdge(new FlowEdge(sourceIndex, indexForGames, currentAgainst));
+                fn.addEdge(new FlowEdge(indexForGames, i, Double.POSITIVE_INFINITY));
+                fn.addEdge(new FlowEdge(indexForGames, j, Double.POSITIVE_INFINITY));
+                indexForGames++;
+            }
+        }
+
+
+        FordFulkerson ff = new FordFulkerson(fn, sourceIndex, sinkIndex);
+
+        Queue<String> result = new Queue<String>();
+        for (int i = 0; i < restTeams.length; i++) {
+            if (ff.inCut(i)) {
+                result.enqueue(restTeams[i]);
+            }
+        }
+
+
+        return result;
     }
 
     public static void main(String[] args) {
         BaseballElimination division = new BaseballElimination(args[0]);
 
-        division.isEliminated("Philadelphia");
+        //division.isEliminated("Detroit");
 
-//        for (String team : division.teams()) {
-//            if (division.isEliminated(team)) {
-//                StdOut.print(team + " is eliminated by the subset R = { ");
-//                for (String t : division.certificateOfElimination(team))
-//                    StdOut.print(t + " ");
-//                StdOut.println("}");
-//            }
-//            else {
-//                StdOut.println(team + " is not eliminated");
-//            }
-//        }
+        for (String team : division.teams()) {
+            if (division.isEliminated(team)) {
+                StdOut.print(team + " is eliminated by the subset R = { ");
+                for (String t : division.certificateOfElimination(team))
+                    StdOut.print(t + " ");
+                StdOut.println("}");
+            }
+            else {
+                StdOut.println(team + " is not eliminated");
+            }
+        }
     }
 
 
