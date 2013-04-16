@@ -109,7 +109,7 @@ public class BaseballElimination {
             }
         }
         if (eliminatedTeams.size() > 0) {
-            StdOut.println("This is trivial.");
+            //StdOut.println("This is trivial.");
             return true;
         }
 
@@ -223,14 +223,12 @@ public class BaseballElimination {
             }
         }
 
-
-        return result;
+        if (result.size() > 0) return result;
+        else return null;
     }
 
     public static void main(String[] args) {
         BaseballElimination division = new BaseballElimination(args[0]);
-
-        //division.isEliminated("Detroit");
 
         for (String team : division.teams()) {
             if (division.isEliminated(team)) {
