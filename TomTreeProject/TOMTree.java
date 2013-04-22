@@ -41,6 +41,7 @@ public class TOMTree {
     }
 
     /**
+     * Method used to build the tree
      *
      * @param nodes
      * @return
@@ -146,6 +147,11 @@ public class TOMTree {
      * @param args
      */
     public static void main(String[] args) {
+
+        TOMTree tomTree = new TOMTree(0.1, new TomDictionary(args[0]));
+
+        if (tomTree.root != null)
+            System.out.println("We have a successful tree built!");
 
     }
 	
