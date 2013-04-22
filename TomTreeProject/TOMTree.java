@@ -19,6 +19,9 @@ public class TOMTree {
      */
 	private double threshold = 0;
 
+    /**
+     * Key number for Node, used for print out
+     */
     private static int number = 0;
 
     /**
@@ -52,7 +55,7 @@ public class TOMTree {
      */
     private boolean build(ArrayList<Node> nodes) {
 
-        outeloop:
+        outerloop:
         for (int i = 0; i < nodes.size(); i++) {
 
             for (int j = i + 1; j < nodes.size(); j++) {
@@ -69,7 +72,7 @@ public class TOMTree {
                     nodes.add(newNode); // add the new node into the calculating tree
 
                     if (build(nodes))  // recursive call
-                        break outeloop; // this should break all iteration both for inner loop or outer loop
+                        break outerloop; // this should break all iteration both for inner loop or outer loop
                 }
             }
         }
@@ -85,6 +88,12 @@ public class TOMTree {
         return true;
     }
 
+    /**
+     * Utility method to create a molecule from two sub nodes
+     * @param a
+     * @param b
+     * @return
+     */
     private Node createMolecule(Node a, Node b) {
         double[] vectorData = createVector(a.atom, b.atom);
 
