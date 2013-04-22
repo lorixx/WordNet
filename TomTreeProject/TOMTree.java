@@ -19,6 +19,7 @@ public class TOMTree {
      */
 	private double threshold = 0;
 
+    private static int number = 0;
 
     /**
      * Constructor
@@ -34,6 +35,7 @@ public class TOMTree {
 
         for (double[] array : tomDictionary.vectorData) {
             Node newNode = new Node(array); // create a new node, but without any parent
+            newNode.isLeaf = true; // set all these nodes to be as leaf
             nodes.add(newNode);
         }
 
@@ -50,18 +52,24 @@ public class TOMTree {
      */
     private boolean build(ArrayList<Node> nodes) {
 
-
+        outeloop:
         for (int i = 0; i < nodes.size(); i++) {
+
             for (int j = i + 1; j < nodes.size(); j++) {
-                double product = product(nodes.get(i).atom, nodes.get(j).atom);
+
+                Node firstNode = nodes.get(i);
+                Node secondNode = nodes.get(j);
+                double product = product(firstNode.atom, secondNode.atom);
                 if (1 - product < threshold) {
-                    Node newNode = createMolecule(nodes.get(i), nodes.get(j));
-                    nodes.remove(i); // remove old node from the calculating tree
-                    nodes.remove(j); // remove old node from the calculating tree
+                    //System.out.print(i + "   " + j + "\n");
+
+                    Node newNode = createMolecule(firstNode, secondNode);
+                    nodes.remove(firstNode); // remove old node from the calculating tree
+                    nodes.remove(secondNode); // remove old node from the calculating tree
                     nodes.add(newNode); // add the new node into the calculating tree
 
                     if (build(nodes))  // recursive call
-                        break; // this should break all iteration both for inner loop or outer loop
+                        break outeloop; // this should break all iteration both for inner loop or outer loop
                 }
             }
         }
@@ -127,7 +135,8 @@ public class TOMTree {
 		private double[] atom; //the vector info, equals TOMDic.get(curr_idx)
         private Node parent;
 		private ArrayList<Node> children; //list of children atom index in TOMDic
-		private boolean isLeaf = false;
+		public boolean isLeaf = false;
+        private int key;
 		
 		//constructor
 		public Node(double[] vector){
@@ -135,6 +144,7 @@ public class TOMTree {
 			isLeaf = false;
             parent = null;
 			atom = vector;
+            key = number++;
 		}
 
 		public ArrayList<Node> children(){
@@ -148,6 +158,29 @@ public class TOMTree {
 		public boolean isLeaf(){
 			return isLeaf;
 		}
+
+
+    }
+
+    /**
+     * Level print the tree
+     *
+     * @param nodes
+     */
+    public void printTree(ArrayList<Node> nodes) {
+        //System.out.print(root.key);
+
+        ArrayList<Node> nextLevel = new ArrayList<Node>();
+        for (Node node : nodes) {
+            System.out.print(node.key);
+            if (node.isLeaf) System.out.print("(isLeaf)");
+            System.out.print("  ");
+
+            nextLevel.addAll(node.children);
+        }
+        System.out.println();
+        if (nextLevel.size()!= 0)
+            printTree(nextLevel);
     }
 
     /**
@@ -161,6 +194,13 @@ public class TOMTree {
 
         if (tomTree.root != null)
             System.out.println("We have a successful tree built!");
+
+        //traverse the tree
+
+        ArrayList<Node> rootArray = new ArrayList<Node>();
+        rootArray.add(tomTree.root);
+        tomTree.printTree(rootArray);
+
 
     }
 	

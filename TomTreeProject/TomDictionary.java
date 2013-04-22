@@ -38,7 +38,7 @@ public class TomDictionary {
             dicSize = count;
 
             dim = vectorData.get(0).length;
-            System.out.println(count);
+            //System.out.println(count);
         } catch (Exception e) {
             System.out.println(e);
         }

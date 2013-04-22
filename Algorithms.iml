@@ -11,6 +11,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="algs4" level="project" />
+    <orderEntry type="library" name="Jama-1.0.3" level="project" />
   </component>
 </module>
 
