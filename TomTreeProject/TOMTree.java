@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+//lib for matrix http://math.nist.gov/javanumerics/jama/
+import Jama.*;
 
 public class TOMTree {
 
@@ -107,10 +109,17 @@ public class TOMTree {
      * @return
      */
     double[] createVector(double[] firstVector, double[] secondVector) {
-        // Implementation
-        // todo:
-
-        return null;
+    	int dim = firstVector.length;
+	double[][] array = {firstVector, secondVector};
+	Matrix M = new Matrix(array);
+	EigenvalueDecomposition e = M.transpose().times(M).eig();
+	double[][] temp = e.getV().getArray();
+	
+	double[] result = new double[temp.length];
+	for(int i = 0; i<dim; i++)
+		result[i] = temp[i][dim-1];
+	
+        return result;
     }
 	
 	private class Node {
