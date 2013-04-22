@@ -64,7 +64,6 @@ public class TOMTree {
                 Node secondNode = nodes.get(j);
                 double product = product(firstNode.atom, secondNode.atom);
                 if (1 - product < threshold) {
-                    //System.out.print(i + "   " + j + "\n");
 
                     Node newNode = createMolecule(firstNode, secondNode);
                     nodes.remove(firstNode); // remove old node from the calculating tree
@@ -205,7 +204,6 @@ public class TOMTree {
             System.out.println("We have a successful tree built!");
 
         //traverse the tree
-
         ArrayList<Node> rootArray = new ArrayList<Node>();
         rootArray.add(tomTree.root);
         tomTree.printTree(rootArray);
