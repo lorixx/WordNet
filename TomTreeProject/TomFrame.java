@@ -30,6 +30,8 @@ public class TomFrame extends JFrame implements ActionListener {
 
     private JFileChooser chooser;
 
+    private JSlider slider;
+
 
 
     //-------------- The following are Model data -----------------//
@@ -54,18 +56,7 @@ public class TomFrame extends JFrame implements ActionListener {
         initData();
     }
 
-    private void initData() {
-        try {
-            dictionary = new Dictionary();
-            dictionary.readDic(this.DICTIONARY_PATH);
-            Dim = dictionary.Dim;
-            tomTree = new TOMTree(delta, dictionary);
-            System.out.println(tomTree.number);
 
-        } catch (Exception e) {
-
-        }
-    }
 
 
     public void actionPerformed(ActionEvent e) {
@@ -121,7 +112,9 @@ public class TomFrame extends JFrame implements ActionListener {
 
 
             }
-            catch(IOException e1) {}
+            catch(IOException e1) {
+
+            }
         } else if (e.getSource() == exitButton) {
              System.exit(0);
         }
@@ -129,6 +122,10 @@ public class TomFrame extends JFrame implements ActionListener {
     }
 
     private void initComponents() {
+
+        // Set this before layout anything else, since it will get rid of other constraint
+        // http://stackoverflow.com/questions/3195666/how-to-place-a-jbutton-at-a-desired-location-in-a-jframe-using-java
+        this.setLayout(null);
 
         // set up menu bar
         this.menuBar = new JMenuBar();
@@ -140,6 +137,19 @@ public class TomFrame extends JFrame implements ActionListener {
         loadImageMenu.add(loadImageButton);
         loadImageMenu.add(exitButton);
 
+//        JPanel sliderPanel = new JPanel();
+//        sliderPanel.setBounds();
+
+        slider = new JSlider(1, 10);
+        slider.setBounds(10, 10, 100, 20);
+
+
+
+        this.add(slider);
+
+
+
+
         chooser = new JFileChooser();
 
         // add event handler
@@ -147,6 +157,25 @@ public class TomFrame extends JFrame implements ActionListener {
         exitButton.addActionListener(this);
     }
 
+    private void initData() {
+        try {
+            dictionary = new Dictionary();
+            dictionary.readDic(this.DICTIONARY_PATH);
+            Dim = dictionary.Dim;
+            tomTree = new TOMTree(delta, dictionary);
+            System.out.println(tomTree.number);
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    /**
+     * Build a panel for image and put it into the main content panel
+     *
+     * @param img
+     * @return
+     */
     private JPanel panelBuilder(int[][] img){
         int dimY = img.length;
         int dimX = img[0].length;
