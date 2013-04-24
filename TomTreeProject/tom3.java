@@ -20,7 +20,7 @@ public class tom3 extends JFrame{
 	static double delta = 0.1;
 	static int noiselevel=35;
 	JPanel originalpanel, noisedpanel, TOMpanel, OMpanel;
-	static String method = "distinct"; // method: distinct/sliding
+	static String method = "sliding"; // method: distinct/sliding
 
 	static int[][] input, noised, TOMresult, OMresult;
 
@@ -28,16 +28,19 @@ public class tom3 extends JFrame{
 		mydic = new Dictionary();
 
 		try{
-			mydic.readDic("Dictionary.txt");
+			mydic.readDic("C:\\repositories\\Algorithms\\TomTreeProject\\Dictionary.txt");
 			Dim = mydic.Dim;
 			mytree = new TOMTree(delta, mydic);
 			System.out.println(mytree.number);
 		} 					
-		catch(IOException e1) {}
+		catch(IOException e1) {
+            System.out.println(e1);
+        }
 
 		tom3 mf = new tom3();
 		mf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mf.setVisible(true);
+
 	}
 
 	public tom3(){
@@ -45,12 +48,15 @@ public class tom3 extends JFrame{
 		final JFileChooser chooser;
 		final JLabel label = new JLabel();
 
+        //this.setSize(600, 400);
+
 		JMenuBar menubar;
 		JMenu fileMb;
 		final JMenuItem openButton;
 		final JMenuItem exitButton;
 
-		menubar = new JMenuBar(); setJMenuBar(menubar);
+		menubar = new JMenuBar();
+        setJMenuBar(menubar);
 		fileMb = new JMenu("File");
 		openButton = new JMenuItem("Open"); 
 		exitButton = new JMenuItem("Exit"); 
@@ -60,6 +66,14 @@ public class tom3 extends JFrame{
 		fileMb.add(exitButton);
 
 		chooser = new JFileChooser();
+
+        //Container content = this.getContentPane();
+        //content.add(new JButton("Button 1"));
+        //Create a panel and add components to it.
+        JPanel contentPane = new JPanel(new BorderLayout());
+        contentPane.add(new Button("Button 1"), BorderLayout.NORTH);
+        contentPane.add(new Button("Button 2"), BorderLayout.PAGE_END);
+        this.setContentPane(contentPane);
 
 		ActionListener action=new ActionListener()
 		{

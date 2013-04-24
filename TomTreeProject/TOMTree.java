@@ -146,21 +146,21 @@ public class TOMTree {
 	 *
 	 * @param nodes
 	 */
-//	public void printTree(ArrayList<Node> nodes) {
-//		//System.out.print(root.key);
-//
-//		ArrayList<Node> nextLevel = new ArrayList<Node>();
-//		for (Node node : nodes) {
-//			System.out.print(node.key);
-//			if (node.isLeaf) System.out.print("(isLeaf)");
-//			System.out.print("  ");
-//
-//			nextLevel.addAll(node.children);
-//		}
-//		System.out.println();
-//		if (nextLevel.size()!= 0)
-//			printTree(nextLevel);
-//	}
+	public void printTree(ArrayList<Node> nodes) {
+		//System.out.print(root.key);
+
+		ArrayList<Node> nextLevel = new ArrayList<Node>();
+		for (Node node : nodes) {
+			System.out.print(node.key);
+			if (node.isLeaf) System.out.print("(isLeaf)");
+			System.out.print("  ");
+
+			nextLevel.addAll(node.children);
+		}
+		System.out.println();
+		if (nextLevel.size()!= 0)
+			printTree(nextLevel);
+	}
 
 
 }
