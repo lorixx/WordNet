@@ -1,5 +1,4 @@
 import java.util.Random;
-import javax.swing.*;
 
 public class Recon {
 	// field
@@ -7,13 +6,9 @@ public class Recon {
 	int[][] input; // read-able size
 	int Dim, dim; // atom dimension
 	private double[][] CoeffOM, CoeffTOM;
+	int coeffCounter;
+	private long time;
 	//constructor
-	public Recon(int[][] input, int Dim){
-		this.input = input;
-		this.Dim = Dim;
-		dim = (int)Math.sqrt(Dim);
-		Data = new myImg(input, dim);
-	}
 
 	public Recon(int[][] input, int Dim, String method){
 		this.input = input;
@@ -65,7 +60,24 @@ public class Recon {
 		return Data.invTransform();
 	}
 
+	public int[][] OMReconMulti(Dictionary dictionary, double Delta){
+		OMReconMulti inner = new OMReconMulti(dictionary, Delta, Data.img);
+		inner.RunOM();
+		time = inner.time();
+		Data.update(FormImg(dictionary, inner.Result()));
+		return Data.invTransform();
+	}
+	
+	
+	public int[][]TOMReconMulti(TOMTree TOM, double Delta){
+		TOMReconMulti inner = new TOMReconMulti(TOM, Delta, Data.img);
+		inner.RunTOM();
+		Data.update(FormImg(TOM.dictionary, inner.Result()));
+		time = inner.time();
+		return Data.invTransform();
+	}
 
+	
 	public int[][] TOMRecon(TOMTree TOM, double Delta){
 		int dicSize = TOM.dictionary.dicSize;
 		final long startTime1 = System.currentTimeMillis();
@@ -118,135 +130,24 @@ public class Recon {
 				input[i][j]+= generator.nextInt(scale) - scale/2;
 	}
 
-
+	public long Time(){
+		return time;
+	}
+	
+	
 	private double[][] FormImg(Dictionary dictionary, double[][] CoeffM){
 		double[][] newImg = new double[CoeffM.length][Dim];
-
+		coeffCounter = 0;
 		for(int i = 0; i<CoeffM.length; i++)
 			for(int jj = 0; jj<dictionary.dicSize; jj++){
-				if(CoeffM[i][jj]!=0.0)
-					newImg[i] = add(newImg[i], dot(dictionary.Dic.get(jj), CoeffM[i][jj]));
+				if(CoeffM[i][jj]!=0.0){
+					coeffCounter++;
+					newImg[i] = add(newImg[i], dot(dictionary.Dic.get(jj), CoeffM[i][jj]));			
+				}
 			}
 		return newImg;
 	}
 
-	//	private void transform(){ 
-	//		// organize image into vectors of size dim-by-dim
-	//		// input-->myimg
-	//
-	//		int numC = (int) imgX/dim;
-	//		int numR = (int) imgY/dim;
-	//		double[][] imgT= new double[numC*numR][Dim];
-	//		int count = 0;
-	//
-	//		for(int ii =0; ii<numR; ii++)
-	//			for(int jj = 0; jj<numC; jj++){
-	//				int z =0;
-	//				int Y = ii*dim, X = jj*dim;
-	//				for(int xx = X; xx<X+dim; xx++)
-	//					for(int yy = Y; yy<Y+dim; yy++){
-	//						imgT[count][z] =(double) input[yy][xx];
-	//						z++;
-	//					}
-	//				count++;
-	//			}
-	//		myimg = imgT;
-	//	}
-	//
-	//	private int[][] invtransform(double[][] newImg){
-	//		// organize image into read-able image of size imgX-by-imgY
-	//		//myimg-->output
-	//		int[][] img = new int[imgY][imgX];
-	//
-	//		int numC = (int) imgX/dim;
-	//		int numR = (int) imgY/dim;
-	//
-	//		int count = 0;
-	//
-	//		for(int ii =0; ii<numR; ii++)
-	//			for(int jj = 0; jj<numC; jj++){
-	//				int z =0;
-	//				int Y = ii*dim, X = jj*dim;
-	//				for(int xx = X; xx<X+dim; xx++)
-	//					for(int yy = Y; yy<Y+dim; yy++){
-	//						img[yy][xx]=(int)newImg[count][z];
-	//						z++;
-	//					}
-	//				count++;
-	//			}
-	//		return img;
-	//	}
-	//
-	//	private int[][] OMReconJF(final Dictionary dictionary, final double Delta) throws InterruptedException{
-	//		int dicSize = dictionary.dicSize;
-	//
-	//		class OMbar extends JPanel{
-	//			/**
-	//			 * 
-	//			 */
-	//			private static final long serialVersionUID = 1L;
-	//			JProgressBar pbar;
-	//			public OMbar(){
-	//				pbar = new JProgressBar();
-	//				pbar.setMinimum(0);
-	//				pbar.setMaximum(100);
-	//				add(pbar);
-	//			}
-	//			public void updateBar(int newValue){
-	//				pbar.setValue(newValue);
-	//				pbar.repaint();
-	//			}
-	//		}
-	//		
-	//		final OMbar it = new OMbar();
-	//		JFrame frame = new JFrame("OM processing...");
-	//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	//		frame.setContentPane(it);
-	//		frame.pack();
-	//		frame.setVisible(true);
-	//
-	//		if(Data.img!=null){
-	//			int numPatch = Data.img.length;
-	//			CoeffOM = new double[numPatch][dicSize];
-	//
-	//			for(int pp = 0; pp<numPatch; pp++){
-	//				int percent = (int) pp/numPatch *100;
-	//				double[] residual = Data.img[pp];
-	//
-	//				// f initialize
-	//						it.updateBar(percent);
-	//
-	//						double resnorm = norm(residual); 
-	//						int count = 0;
-	//						while( resnorm >Delta & count < dictionary.Dim)
-	//						{
-	//							//find next atom
-	//							int index = 0; 
-	//							double maxval = 0;
-	//							double coeff = 0;
-	//							for(int i = 0; i<dicSize; i++){
-	//								//inner product of residual and atom candidate
-	//								double currval = product(residual, dictionary.Dic.get(i));
-	//								if (Math.abs(currval)>maxval){
-	//									maxval = Math.abs(currval);
-	//									index = i;
-	//									coeff = currval;
-	//								}
-	//							}
-	//							CoeffOM[pp][index] = coeff;
-	//							residual = minus(residual, dot(dictionary.Dic.get(index), coeff));
-	//							resnorm = norm(residual);
-	//							count++;
-	//						}
-	//			}		
-	//		}
-	//		frame.setVisible(false);
-	//
-	//		Data.update(FormImg(dictionary, CoeffOM));
-	//		return Data.invTransform();
-	//		
-	//
-	//	}
 
 	private double product(double[] d1, double[] d2){
 		double result = 0;		

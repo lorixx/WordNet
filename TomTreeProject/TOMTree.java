@@ -36,9 +36,6 @@ public class TOMTree {
 
 		for (int i = 0; i<dictionary.dicSize; i++) {
 			Node newNode = new Node(dictionary.Dic.get(i)); // create a new node, but without any parent
-            newNode.key = number++;
-
-
 			//newNode.curr_idx = i;
 			newNode.isLeaf = true; // set all these nodes to be as leaf
 
@@ -84,9 +81,7 @@ public class TOMTree {
 
 	if (this.root == null) {
 		Node rootNode = new Node(null);
-        rootNode.key = number++;
-
-        rootNode.children.addAll(nodes);
+		rootNode.children.addAll(nodes);
 		this.root = rootNode; // assign to global
 	}
 
@@ -97,8 +92,6 @@ public class TOMTree {
 		double[] vectorData = createVector(a.atom, b.atom);
 
 		Node molecule = new Node(vectorData);
-        molecule.key = number++;
-
 		molecule.children.add(a);
 		molecule.children.add(b);
 
@@ -139,6 +132,7 @@ public class TOMTree {
 
 		return result;
 	}
+
 
 
 	/**
