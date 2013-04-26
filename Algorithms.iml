@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/SeamCut" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/BaseballElimination" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TomTreeProject" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Burrows" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

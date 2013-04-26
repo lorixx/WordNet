@@ -134,7 +134,6 @@ public class TOMTree {
 	}
 
 
-
 	/**
 	 * Level print the tree
 	 *
