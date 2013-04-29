@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Created with IntelliJ IDEA.
  * User: zhuang
@@ -39,16 +41,55 @@ public class BurrowsWheeler {
     // apply Burrows-Wheeler decoding, reading from standard input and writing to standard output
     public static void decode() {
 
+        int first = BinaryStdIn.readInt();
+        String s = BinaryStdIn.readString();
+        BinaryStdIn.close();
+
+        // init two char arrays
+        char[] encodedCharArray = s.toCharArray();
+        char[] sortedCharArray = s.toCharArray();
+        Arrays.sort(sortedCharArray);
+
+        int[] next = new int[s.length()];
+
+        // create a ST to keep track of char positions
+        ST<Character, Queue<Integer>> table = new ST<Character, Queue<Integer>>();
+        for (int i = 0; i < s.length(); i++) {
+
+            char currentChar = encodedCharArray[i];
+            if (!table.contains(currentChar)) {
+                Queue<Integer> queue = new Queue<Integer>();
+                table.put(currentChar, queue);
+            }
+            table.get(currentChar).enqueue(i);
+        }
+
+        // create next array
+        for (int i = 0; i < s.length(); i++) {
+            char ch = sortedCharArray[i];
+            int nextIndex = table.get(ch).dequeue();
+            next[i] = nextIndex;
+        }
+
+//        for (int i : next) {
+//            StdOut.println(i);
+//        }
+
+        // Print the original out using the first index
+        int currentIndex = first;
+        //StdOut.println("First is " + first);
+        for (int i = 0; i < s.length(); i++) {
+
+            BinaryStdOut.write(sortedCharArray[currentIndex]);
+            currentIndex = next[currentIndex];
+
+//            if (currentIndex == first)
+//                break;
+
+        }
+        BinaryStdOut.close();
     }
 
-    private char getChar( String originalString, int startSuffixForOrigin, int index) {
-
-        if ( index < originalString.length() - startSuffixForOrigin)
-            return originalString.charAt(startSuffixForOrigin + index);
-        else
-            return originalString.charAt(index - (originalString.length() - startSuffixForOrigin));
-
-    }
 
     // if args[0] is '-', apply Burrows-Wheeler encoding
     // if args[0] is '+', apply Burrows-Wheeler decoding

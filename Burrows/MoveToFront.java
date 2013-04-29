@@ -51,7 +51,7 @@ public class MoveToFront {
         while (!BinaryStdIn.isEmpty()) {
             int index = BinaryStdIn.readInt(8);
             char c = charList[index];
-            StdOut.print(c);
+            BinaryStdOut.write(c);
 
             for (int j = index; j > 0; j--) {
                 charList[j] = charList[j - 1];
@@ -63,7 +63,7 @@ public class MoveToFront {
 
         }
 
-        BinaryStdIn.close();
+        BinaryStdOut.close();
     }
 
     // if args[0] is '-', apply move-to-front encoding
