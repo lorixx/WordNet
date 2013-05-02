@@ -143,9 +143,10 @@ public class Sum {
     /**
      * Got this answer from Wiki 3-Sum, but there is bug for:
      * -4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6
-     * Since there is duplicate in the answer.
      *
-     * Need to use Hash to keep track of result.
+     *
+     * 1. Handle Array size less than 3
+     * 2. Handle duplicate results, keep track of the first element
      *
      *
      * @param num
@@ -154,7 +155,12 @@ public class Sum {
     public static ArrayList<ArrayList<Integer>> threeSum(int[] num) {
         // Start typing your Java solution below
         // DO NOT write main() function
+
         ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+
+        if (num.length < 3)  // handle edge case
+            return result;
+
         int[] aux = Arrays.copyOf(num, num.length);
         Arrays.sort(aux);
 
@@ -165,7 +171,6 @@ public class Sum {
             if (i != 0 && aux[i] == oldStart) {
                 continue;
             }
-
 
             j = i + 1; // next to the start
             k = num.length - 1; // last index
@@ -185,16 +190,15 @@ public class Sum {
                 else if (aux[i] + aux[j] + aux[k] < 0) j++;
             }
 
-            oldStart = aux[i];
-
+            oldStart = aux[i]; // update old start
         }
 
         return result;
     }
 
     public static void main(String[] args) {
-        //int[] num = {-4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6}; //
-        int[] num = {-1, -3, 1, -2, -1,5,6,2,1,0};
+        int[] num = {-4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6}; //
+        //int[] num = {-1, -3, 1, -2, -1,5,6,2,1,0};
         System.out.println(Sum.threeSum(num));
     }
 }
