@@ -60,6 +60,8 @@ public class DP {
         return result;
     }
 
+
+
     public static  void main(String[] args) {
         //int[] array = {5, 7, 8, 1, 2, 9, 4,  10, 11, 14, 16};
         int[] array = {5, 3, 4, 8, 6, 7};
@@ -68,5 +70,7 @@ public class DP {
         while (!result.empty()) {
             System.out.print(result.pop() + "  ");
         }
+
+
     }
 }
