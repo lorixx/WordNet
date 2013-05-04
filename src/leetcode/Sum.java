@@ -141,7 +141,7 @@ public class Sum {
 
 
     /**
-     * Got this answer from Wiki 3-Sum, but there is bug for:
+     * Got this answer from Wiki 3-Sum:
      * -4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6
      *
      *

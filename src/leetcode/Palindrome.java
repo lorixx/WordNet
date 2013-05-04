@@ -1,5 +1,7 @@
 package leetcode;
 
+import java.util.Timer;
+
 /**
  * Created with IntelliJ IDEA.
  * User: zhuang
@@ -17,6 +19,14 @@ public class Palindrome {
         return true;
     }
 
+
+    /**
+     * It is a correct Dynamic Programming solution
+     * Running time is O(n^3), but it failed on the online judge.
+     *
+     * @param s
+     * @return
+     */
     public static int minCut(String s) {
 
         if (s == null) return 0;
@@ -26,16 +36,16 @@ public class Palindrome {
         int[][] table = new int[length][length];
         int min;
 
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < length; j++) {
-                if (i == j)
-                    table[i][j] = 0;
-                else
-                    table[i][j] = -1;
-            }
-        }
+//        for (int i = 0; i < length; i++) {
+//            for (int j = 0; j < length; j++) {
+//                if (i == j)
+//                    table[i][j] = 0;
+//                else
+//                    table[i][j] = -1;
+//            }
+//        }
 
-        for (int size = 2; size <= length; size++) {
+        for (int size = 1; size <= length; size++) {
             for (int i = 0; i < length - size + 1; i++) {
                 int j = i + size - 1; // since we start from 0, need to minus 1 for array index
                 if (isPalindrome(s.substring(i, j + 1))) {
@@ -53,19 +63,14 @@ public class Palindrome {
             }
         }
 
-//        for (int i = 0; i < length; i++) {
-//            for (int j = 0; j < length; j++) {
-//                System.out.printf( "%4d  ",  table[i][j] );
-//            }
-//            System.out.println();
-//        }
-
-
         return table[0][length - 1];
     }
 
     public static void main(String[] args) {
         //System.out.println(Palindrome.minCut("abcbammakakss"));
-        System.out.println(Palindrome.minCut(null));
+        long start = System.nanoTime();
+        System.out.println(Palindrome.minCut("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
+        long duration = System.nanoTime() - start;
+        System.out.println((double) duration / 1000000000 + "second");
     }
 }
