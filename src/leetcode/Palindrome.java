@@ -29,6 +29,7 @@ public class Palindrome {
      */
     public static int minCut(String s) {
 
+//     /* This version is a O(n^3) implementation  */
 //        if (s == null) return 0;
 //        if (s.length() <= 1) return 0;
 //
@@ -70,43 +71,29 @@ public class Palindrome {
         for (int i = 0; i < length; i++) {
             minCut[i] = i;
         }
-        minCut[0] = 0;
+        //minCut[0] = 0;
 
-        for (int size = 1; size <= length; size++) {
+        for (int end = 1; end < length; end++) {
 
-            if (size > 1 && s.charAt(0) == s.charAt(size - 1) && (isPalindrome[1][size - 2] || size < 3)) {
-                minCut[size - 1] = 0;
-                isPalindrome[0][size - 1] = true;
+            /* Critical check for those are palindrome */
+//            if (size > 1 && s.charAt(0) == s.charAt(size - 1) && (isPalindrome[1][size - 2] || size < 3)) {
+//                minCut[size - 1] = 0;
+//                isPalindrome[0][size - 1] = true;
+//                continue;
+//            }
+            if (s.charAt(0) == s.charAt(end) && (isPalindrome[1][end - 1] || end < 2)) {
+                minCut[end] = 0;
+                isPalindrome[0][end] = true;
                 continue;
             }
 
-            for (int i = 0; i < size - 1; i++) {  //size minus 1 due to the edge
 
-                int leftCut = minCut[i];
-                int rightCut, total;
+            for (int i = 0; i < end; i++) {  //size minus 1 due to the edge
 
-
-
-                if (size - 1 - i == 1) {
-                    rightCut = 0;   // if it is one character, then it is palindrome
-                    total = leftCut + rightCut + 1;
-                    if (minCut[size - 1] > total) {
-                        minCut[size - 1] = total;
-                    }
-                } else if (size - 1 - i == 2 && s.charAt(i + 1) == s.charAt(size - 1))  {
-                    rightCut = 0;
-                    isPalindrome[i + 1][size - 1] = true;
-                    total = leftCut + rightCut + 1;
-                    if (minCut[size - 1] > total) {
-                        minCut[size - 1] = total;
-                    }
-                }
-                else if (s.charAt(i + 1) == s.charAt(size - 1) && isPalindrome[i + 2][size - 2]) {
-                    rightCut = 0;
-                    isPalindrome[i + 1][size - 1] = true;
-                    total = leftCut + rightCut + 1;
-                    if (minCut[size - 1] > total) {
-                        minCut[size - 1] = total;
+                if ( end - i > 1 && s.charAt(i + 1) == s.charAt(end) && (isPalindrome[i + 2][end - 1] || end - i < 2 )) {
+                    isPalindrome[i + 1][end] = true;
+                    if (minCut[end] > minCut[i] + 1) {
+                        minCut[end] = minCut[i] + 1;
                     }
                 }
 
