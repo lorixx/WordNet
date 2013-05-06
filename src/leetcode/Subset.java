@@ -22,7 +22,7 @@ public class Subset {
      * @param S
      * @return
      */
-    public ArrayList<ArrayList<Integer>> subsets(int[] S) {
+    public ArrayList<ArrayList<Integer>> iterativeSubsets(int[] S) {
         // Start typing your Java solution below
         // DO NOT write main() function
 
@@ -60,5 +60,54 @@ public class Subset {
 
 
         return result;
+    }
+
+    public ArrayList<ArrayList<Integer>> recursiveSubsets(int[] S) {
+
+        int[] sortedArray = Arrays.copyOf(S, S.length);
+        Arrays.sort(sortedArray); // 1. first sort the array
+
+        ArrayList<ArrayList<Integer>> empty = new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<Integer>> result = recursiveSubsets(sortedArray.length - 1, sortedArray, empty);
+
+        // add the empty array to result
+        ArrayList<Integer> emptyArray = new ArrayList<Integer>();
+        result.add(emptyArray);
+        return result;
+    }
+
+    /*
+     * Recursive function to create combinations
+     */
+    private ArrayList<ArrayList<Integer>> recursiveSubsets(int index, int[] array, ArrayList<ArrayList<Integer>> visited) {
+        if (index < 0)
+            return visited;
+
+        ArrayList<ArrayList<Integer>> newVisited = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> singleInteger = new ArrayList<Integer>();
+        singleInteger.add(array[index]);
+        newVisited.add(singleInteger);
+
+        for (ArrayList<Integer> current : visited) {
+
+            ArrayList<Integer> temp = new ArrayList<Integer>();
+
+            temp.add(array[index]);
+            for (int v : current) {
+                temp.add(v);
+            }
+
+            newVisited.add(temp);
+            newVisited.add(current);
+        }
+
+        return recursiveSubsets(index - 1, array, newVisited);
+    }
+
+
+    public static void main(String[] args) {
+        Subset subset = new Subset();
+        int[] array = {1, 2};
+        System.out.println(subset.recursiveSubsets(array));
     }
 }
