@@ -23,7 +23,6 @@ public class Permutation {
             result.add(allInt);
         }
 
-
         for (int currentAvailable : allInt) {
 
             ArrayList<Integer> others = new ArrayList<Integer>();
