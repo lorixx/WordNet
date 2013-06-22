@@ -14,8 +14,8 @@ public class Solution {
 
     private int bound;
     private int size;
-    private HashMap<String, Node> map;
-    private TreeMap<String, Node> table;
+    private HashMap<String, Node> map;    // hash map for fast search
+    private TreeMap<String, Node> table;  // tree map for fast alphabetical order print out
     private Node head;
     private Node tail;
 
@@ -76,8 +76,9 @@ public class Solution {
             System.out.println("NULL");
             return "NULL";
         }
-        System.out.println(map.get(key).value);
-        return map.get(key).value;
+        String result = map.get(key).value;
+        System.out.println(result);
+        return result;
     }
 
     public void dump() {
