@@ -2,6 +2,7 @@ package practice;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.TreeMap;
 
 
@@ -13,60 +14,45 @@ public class Solution {
 
     private int bound;
     private int size;
+    private HashMap<String, Node> map;
     private TreeMap<String, Node> table;
     private Node head;
     private Node tail;
 
     public Solution() {
+        this.map = new HashMap<String, Node>();
         this.table = new TreeMap<String, Node>();
-        bound = 0; //default bound
+        bound = 0;
         size = 0;
         head = tail = null;
     }
 
     public void setBound(int boundSize) {
-        if (boundSize < 0) {
-            //throw new IllegalArgumentException("Bound size should not be less than 1.");
-            return;
-        }
 
         bound = boundSize;
-        if (size > bound) {
+        if (bound == 0) {
+            map.clear();
+            table.clear();
+            head = tail = null;
+            size = 0;
+        } else {
             while (size > bound) {
                 Node nodeToDelete = tail;
-
-                if (tail == head) {
-                    tail.prev = null;
-                    tail.next = null;
-                    head = tail = null;
-
-                } else {
-                    tail.prev.next = null;
-                    tail = tail.prev;
-                }
-
-
+                tail.prev.next = null;
+                tail = tail.prev;
                 size--;
+                map.remove(nodeToDelete.key);
                 table.remove(nodeToDelete.key);
             }
         }
     }
 
     public void set(String key, String value) {
-        if (bound == 0) return;
-        if (key == null || value == null) return;
-
-        if (key.length() > 10)
-            //throw new IllegalArgumentException("Key string's size should not exceed 10 characters.");
-            return;
-
-        if (value.length() > 10)
-            //throw new IllegalArgumentException("Value string's size should not exceed 10 characters.");
-            return;
+        if (bound == 0 || key == null || value == null || key.length() > 10 || value.length() > 10) return;
 
         // if exist then update
-        if (this.table.containsKey(key)) {
-            Node node = this.table.get(key);
+        if (this.map.containsKey(key)) {
+            Node node = this.map.get(key);
             node.value = value;
             moveToHead(key);
         } else
@@ -74,30 +60,30 @@ public class Solution {
     }
 
     public String get(String key) {
-        if (!table.containsKey(key)) {
+        if (!map.containsKey(key)) {
             System.out.println("NULL");
             return "NULL";
         }
 
-        String result = table.get(key).value;
+        String result = map.get(key).value;
         moveToHead(key);
         System.out.println(result);
         return result;
     }
 
     public String peek(String key) {
-        if (!table.containsKey(key)) {
+        if (!map.containsKey(key)) {
             System.out.println("NULL");
             return "NULL";
         }
-        System.out.println(table.get(key).value);
-        return table.get(key).value;
+        System.out.println(map.get(key).value);
+        return map.get(key).value;
     }
 
     public void dump() {
 
         for (String key : table.keySet()) {
-            System.out.println(key + " " + table.get(key).value);
+            System.out.println(key + " " + map.get(key).value);
         }
     }
 
@@ -109,14 +95,16 @@ public class Solution {
 
         if (size == 0) {
             head = tail = newNode;
-            table.put(key, newNode); //add the new node to table
+            map.put(key, newNode); //add the new node to map
+            table.put(key, newNode);
             size++; // update the size
             return;
         }
 
         head.prev = newNode;
         head = newNode;
-        table.put(key, newNode); //add the new node to table
+        map.put(key, newNode); //add the new node to map
+        table.put(key, newNode);
 
 
         if (size < bound) {
@@ -126,13 +114,13 @@ public class Solution {
             Node oldTail = tail;
             tail = tail.prev;
             tail.next = null;
-            table.remove(oldTail.key); // remove from table
-            oldTail = null; //set to null
+            map.remove(oldTail.key); // remove from map
+            table.remove(oldTail.key);
         }
     }
 
     private void moveToHead(String key) {
-        Node targetNode = table.get(key);
+        Node targetNode = map.get(key);
         if (targetNode == head) return;
         if (targetNode == tail) {
             tail = targetNode.prev;
@@ -225,7 +213,7 @@ public class Solution {
             String line = br.readLine();
             int N = Integer.parseInt(line);
             for (int i = 0; i < N; i++) {
-                 line = br.readLine();
+                line = br.readLine();
                 String[] result = line.split(" ");
                 String command = result[0];
                 if (command.equals("BOUND")) {
@@ -251,54 +239,3 @@ public class Solution {
         }
     }
 }
-
-
-
-/*
-Solution lruCache = new Solution();
-lruCache.setBound(1);
-
-//test 1, set bound to 1;
-lruCache.set("a", "1");
-lruCache.set("b", "2");
-lruCache.dump();
-System.out.println("==================");
-
-//test 2, set bound to 3, add more data and test lru order after get
-lruCache.setBound(3);
-lruCache.set("c", "3");
-lruCache.set("a", "1");
-lruCache.set("d", "4");
-
-lruCache.dump();
-System.out.println("==================");
-
-//test 3, if set bound less than the current size number, then we need to remove the extra;
-lruCache.setBound(5);
-lruCache.set("g", "7");
-lruCache.set("e", "5");
-lruCache.set("f", "6");
-
-lruCache.dump();
-System.out.println("==================");
-
-lruCache.setBound(3); //change the bound size, should remove a and d
-lruCache.dump();
-System.out.println("==================");
-
-//test 4, set value for the existing key and it should become the head
-lruCache.set("g", "9");
-lruCache.dump();
-System.out.println("==================");
-
-// test 5, peek the key should not change the order
-
-System.out.println("Peek f is " + lruCache.peek("f"));
-lruCache.dump();
-System.out.println("==================");
-
-
-// test 6, get the key should change the order
-System.out.println("Peek f is " + lruCache.get("f"));
-lruCache.dump();
-System.out.println("==================");*/
