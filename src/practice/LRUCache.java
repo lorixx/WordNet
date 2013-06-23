@@ -28,21 +28,27 @@ public class LRUCache {
         if (this.map.size() > boundSize) {
             //need to remove old
             int num = this.map.size() - boundSize;
+            ArrayList<String> keysToDelete = new ArrayList<String>();
 
-            BoundableLinkedHashMap<String, String>newMap = new BoundableLinkedHashMap<String, String>();
-            newMap.bound = boundSize;
+            //BoundableLinkedHashMap<String, String>newMap = new BoundableLinkedHashMap<String, String>();
+            //newMap.bound = boundSize;
             Set<String> keys = this.map.keySet();
             for (String key : keys) {
                 if (num == 0) {
                     //start adding the rest to new hashmap
-                    newMap.put(key, this.table.get(key));
+                    //newMap.put(key, this.table.get(key));
+                    break;
+
                 } else {
                     this.table.remove(key);
+                    keysToDelete.add(key);
                     num--;
                 }
             }
 
-            this.map = newMap;
+            for (String key : keysToDelete) {
+                this.map.remove(key);
+            }
         }
         this.map.bound = boundSize;   //update the bound size
     }
