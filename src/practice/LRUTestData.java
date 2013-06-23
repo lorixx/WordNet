@@ -1,7 +1,6 @@
 package practice;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -29,7 +28,7 @@ public class LRUTestData {
 
                 switch (random) {
                     case 0:
-                        out.println("BOUNDS " + randomGenerator.nextInt(99999));
+                        out.println("BOUND " + randomGenerator.nextInt(99999));
                         break;
                     case 1:
                         if (keys.size() == 0) break;
@@ -56,7 +55,6 @@ public class LRUTestData {
 
 
             }
-            //out.println("BOUNDS 34");
             out.flush();
             out.close();
 
