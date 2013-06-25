@@ -18,15 +18,18 @@ import java.util.NoSuchElementException;
  */
 public class Stack<Item> implements Iterable<Item> {
 
-    private int l;
+    private int l;    // stack size
 
-    private Node head;
+    private Node head;  // the head of the linked list
 
     public Stack() {
         l = 0;
         head = null;
     }
 
+    /**
+     * Handle the edge case when the linked list is empty
+     */
     public void push(Item v) {
         if (head == null) {
             head = new Node(v);
@@ -39,6 +42,10 @@ public class Stack<Item> implements Iterable<Item> {
         }
     }
 
+    /**
+     * Throws an exception when the stack is empty
+     * @return
+     */
     public Item pop() {
         if (l == 0) throw new IllegalAccessError("The stack is empty");
         else {
@@ -65,13 +72,18 @@ public class Stack<Item> implements Iterable<Item> {
             v = data;
         }
     }
+
+    // Implementing the interface "Iterable<Item>"
     public Iterator iterator() {
          return new StackIterator();
     }
 
+    /**
+     * Iterator to use
+     */
     private class StackIterator implements Iterator {
 
-        private Node current = head;
+        private Node current = head;  //start from the head for traversing
 
         public boolean hasNext() {
              return current != null;

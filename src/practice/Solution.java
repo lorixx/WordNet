@@ -2,8 +2,8 @@ package practice;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.TreeMap;
 
 
 /**
@@ -15,13 +15,11 @@ public class Solution {
     private int bound;
     private int size;
     private HashMap<String, Node> map;    // hash map for fast search
-    private TreeMap<String, Node> table;  // tree map for fast alphabetical order print out
     private Node head;
     private Node tail;
 
     public Solution() {
         this.map = new HashMap<String, Node>();
-        this.table = new TreeMap<String, Node>();
         bound = 0;
         size = 0;
         head = tail = null;
@@ -32,7 +30,6 @@ public class Solution {
         bound = boundSize;
         if (bound == 0) {
             map.clear();
-            table.clear();
             head = tail = null;
             size = 0;
         } else {
@@ -42,7 +39,6 @@ public class Solution {
                 tail = tail.prev;
                 size--;
                 map.remove(nodeToDelete.key);
-                table.remove(nodeToDelete.key);
             }
         }
     }
@@ -82,8 +78,11 @@ public class Solution {
     }
 
     public void dump() {
+        String[] array = map.keySet().toArray(new String[0]);
+        Arrays.sort(array);
 
-        for (String key : table.keySet()) {
+
+        for (String key : array) {
             System.out.println(key + " " + map.get(key).value);
         }
     }
@@ -97,7 +96,6 @@ public class Solution {
         if (size == 0) {
             head = tail = newNode;
             map.put(key, newNode); //add the new node to map
-            table.put(key, newNode);
             size++; // update the size
             return;
         }
@@ -105,8 +103,6 @@ public class Solution {
         head.prev = newNode;
         head = newNode;
         map.put(key, newNode); //add the new node to map
-        table.put(key, newNode);
-
 
         if (size < bound) {
             size++; //add the size
@@ -116,7 +112,6 @@ public class Solution {
             tail = tail.prev;
             tail.next = null;
             map.remove(oldTail.key); // remove from map
-            table.remove(oldTail.key);
         }
     }
 

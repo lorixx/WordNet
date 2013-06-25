@@ -1,46 +1,50 @@
 package practice;
 
 
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.*;
 
-
+/**
+ * Created with IntelliJ IDEA.
+ * User: Zhisheng
+ * Date: 6/22/13
+ * Time: 3:51 PM
+ * To change this template use File | Settings | File Templates.
+ */
 public class LRUCache {
 
     private BoundableLinkedHashMap<String, String> map;    // hash map for fast search
     private TreeMap<String, String> table;
+    private HashMap<String, String> accessMap;
+    private ArrayList<String> keysToDelete;
+
 
     public LRUCache() {
         this.map = new BoundableLinkedHashMap<String, String>();
         this.table = new TreeMap<String, String>();
+        this.accessMap = new HashMap<String, String>();
+        this.keysToDelete = new ArrayList<String>();
     }
 
     public void setBound(int boundSize) {
 
-
-
         if (boundSize == 0) {
             this.map.clear();
             this.table.clear();
+            this.accessMap.clear();
         }
 
         if (this.map.size() > boundSize) {
             //need to remove old
             int num = this.map.size() - boundSize;
-            ArrayList<String> keysToDelete = new ArrayList<String>();
 
-            //BoundableLinkedHashMap<String, String>newMap = new BoundableLinkedHashMap<String, String>();
-            //newMap.bound = boundSize;
             Set<String> keys = this.map.keySet();
             for (String key : keys) {
                 if (num == 0) {
-                    //start adding the rest to new hashmap
-                    //newMap.put(key, this.table.get(key));
                     break;
-
                 } else {
-                    this.table.remove(key);
                     keysToDelete.add(key);
                     num--;
                 }
@@ -48,7 +52,10 @@ public class LRUCache {
 
             for (String key : keysToDelete) {
                 this.map.remove(key);
+                this.table.remove(key);
+                this.accessMap.remove(key);
             }
+            keysToDelete.clear();
         }
         this.map.bound = boundSize;   //update the bound size
     }
@@ -58,22 +65,23 @@ public class LRUCache {
 
         map.put(key, value);
         table.put(key, value);
+        accessMap.put(key, value);
 
     }
 
     public void get(String key) {
-        if (!map.containsKey(key)) {
+        if (!accessMap.containsKey(key)) {
             System.out.println("NULL");
         } else {
-            System.out.println(map.get(key));
+            System.out.println(map.get(key)); //get and update the usage
         }
     }
 
     public void peek(String key) {
-        if (!map.containsKey(key)) {
+        if (!accessMap.containsKey(key)) {
             System.out.println("NULL");
         } else {
-            System.out.println(table.get(key)); //use tree map for get without updating the eldest
+            System.out.println(accessMap.get(key)); //use fast hashmap for access
         }
 
     }
@@ -81,7 +89,7 @@ public class LRUCache {
     public void dump() {
 
         for (String key : table.keySet()) {
-            System.out.println(key + " " + table.get(key));
+            System.out.println(key + " " + this.accessMap.get(key)); //fast access
         }
     }
 
@@ -95,8 +103,10 @@ public class LRUCache {
         public int bound;
         @Override
         protected boolean removeEldestEntry(Map.Entry eldest) {
-            if (this.size() > bound)
+            if (this.size() > bound) {
                 table.remove(eldest.getKey()); //remove from the table
+                accessMap.remove(eldest.getKey()); //remove from the accessMap
+            }
 
             return this.size() > bound;
         }
@@ -160,9 +170,10 @@ public class LRUCache {
     }
 
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
 
         LRUCache solution = new LRUCache();
-        //solution.test();
+        solution.test();
         try {
 
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -189,6 +200,9 @@ public class LRUCache {
                     solution.dump();
                 }
             }
+            long stop = System.currentTimeMillis();
+            double elapseTime = (stop - start) / 1000.0;
+            System.out.println("Total time is " + elapseTime + " seconds");
 
         } catch (Exception e) {
             System.out.println(e);
