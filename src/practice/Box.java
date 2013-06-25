@@ -1,5 +1,7 @@
 package practice;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Zhisheng
@@ -17,5 +19,34 @@ public class Box {
         length = l;
         width = w;
         height = h;
+    }
+
+    public ArrayList<ArrayList<Integer>> permutations() {
+
+        ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+
+        if (length == width && length == height) {    // only one
+            ArrayList<Integer> first = new ArrayList<Integer>();
+            first.add(length); first.add(width);
+            result.add(first);
+
+        } else if (length == width) {
+
+            ArrayList<Integer> first = new ArrayList<Integer>();
+            first.add(length); first.add(width);
+
+            ArrayList<Integer> second = new ArrayList<Integer>();
+            second.add(length); second.add(height);
+
+            ArrayList<Integer> third = new ArrayList<Integer>();
+            third.add(height); third.add(length);
+
+        }
+        // todo
+
+
+        return result;
+
+
     }
 }
