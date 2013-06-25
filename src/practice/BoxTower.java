@@ -21,6 +21,10 @@ public class BoxTower {
             computingBoxes.add(temp);
         }
 
+        if (boxes.length == 1) {
+            return computingBoxes.get(0).get(0).height;
+        }
+
 
         for (int num = 1; num < boxes.length; num ++) {
 
@@ -216,8 +220,11 @@ public class BoxTower {
 //        Box a = new Box(5, 2, 4, 0);
 //        Box b = new Box(1, 4, 2, 1);
 //        Box c = new Box(4, 4, 2, 2);
-////        Box[] array = new Box[3];
-////        array[0] = a; array[1] = b; array[2] = c;
+        Box a = new Box(1, 3, 1, 0);
+       // Box b = new Box(1, 1, 1, 1);
+//        Box c = new Box(1, 1, 1, 2);
+        Box[] array = new Box[1];
+        array[0] = a; //array[1] = b; //array[2] = c;
 //
 //        Box d = new Box(1, 2, 10, 3);
 //        Box[] array = new Box[4];
@@ -226,7 +233,7 @@ public class BoxTower {
 //
 //
         BoxTower solution = new BoxTower();
-//        System.out.println(solution.maxHeight(array));
+        System.out.println(solution.maxHeight(array));
 
 
         try {
@@ -241,9 +248,10 @@ public class BoxTower {
 
                 boxes[i] = new Box(Integer.parseInt(result[0]), Integer.parseInt(result[1]), Integer.parseInt(result[2]), i);
 
-                System.out.println(solution.maxHeight(boxes));
+
 
             }
+            System.out.println(solution.maxHeight(boxes));
 
         } catch (Exception e) {
             System.out.println(e);
