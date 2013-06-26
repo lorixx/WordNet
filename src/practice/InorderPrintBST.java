@@ -69,32 +69,44 @@ public class InorderPrintBST {
             if (currentNode != null) {
                 stack.add(currentNode);
                 if (currentNode.right != null) stack.add(currentNode.right);
-                if (currentNode.left != null) stack.add(currentNode.left);
+               // if (currentNode.left != null) stack.add(currentNode.left);
                 currentNode = currentNode.left;
 
             } else {
                 TreeNode node = stack.remove(stack.size() - 1);
+
+                //if(node.left != null || node.right!= null) currentNode = node;
                 System.out.println(node.value);
-                currentNode = node.right;
             }
         }
     }
 
     public static void main(String[] args) {
+
+
+             /*
+                       5
+                     /   \
+                    3     7
+                   /\    / \
+                  1  4  6   8
+              */
         TreeNode a = new TreeNode(1, null, null);
         TreeNode b = new TreeNode(3, null, null);
         TreeNode c = new TreeNode(4, null, null);
         TreeNode d = new TreeNode(5, null, null);
         TreeNode e = new TreeNode(6, null, null);
         TreeNode f = new TreeNode(7, null, null);
+        TreeNode g = new TreeNode(8, null, null);
 
         b.left = a;
         b.right = c;
         f.left = e;
+        f.right = g;
         d.left = b;
         d.right = f;
 
-        InorderPrintBST.inOrderPrint(a);
+        InorderPrintBST.preOrderPrint(d); // order list
 
 
 
