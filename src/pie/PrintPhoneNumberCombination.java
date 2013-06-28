@@ -2,21 +2,23 @@ package pie;
 
 import java.util.ArrayList;
 
-
+/**
+ * Recursive version
+ */
 public class PrintPhoneNumberCombination {
 
     public ArrayList<String> letterCombinations(String digits) {
-        // Start typing your Java solution below
-        // DO NOT write main() function
+
         if (digits == null) return null;
+        ArrayList<String> result = new ArrayList<String>();
 
         if (digits.equals("")) {
-            return new ArrayList<String>();
+            result.add("");
+            return result;
         }
 
         if (digits.length() == 1) return lettersForNumber(digits);
         else {
-            ArrayList<String> result = new ArrayList<String>();
             ArrayList<String> subSet = letterCombinations(digits.substring(1));
             ArrayList<String> letters = lettersForNumber(digits.substring(0, 1));
             for (String letter : letters) {
@@ -28,6 +30,50 @@ public class PrintPhoneNumberCombination {
                 }
             }
             return result;
+        }
+    }
+
+    /**
+     * Iterative version of phone number combination, we keep track of an array of indices
+     * This indices array keeping track of the position of letter place. If the last bit iteration finished, then
+     * we move to the next-to-last bit and increase the index.
+     *
+     * In the end, when we discover that the index for the first character reach to the end, then we stop and we have
+     * a list of letter combinations.
+     */
+    public ArrayList<String> iterativeLetterCombinations(String digits) {
+        if (digits == null) return null;
+        ArrayList<String> result = new ArrayList<String>();
+
+        if (digits.equals("")) {
+            result.add("");
+            return result;
+        }
+
+        if (digits.length() == 1) return lettersForNumber(digits);
+        else {
+            int[] indices = new int[digits.length()];
+            for (int i = 0; i < indices.length; i++)
+                indices[i] = 0; // start from index 0 for each
+            while (true) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < digits.length(); i++) {
+                    sb.append(lettersForNumber(digits.substring(i, i+1)).get(indices[i])); // append letter
+                }
+                result.add(sb.toString());
+                indices[indices.length - 1]++; // update the value in the last slot
+
+                //update the indices array
+                for (int j = indices.length - 1; j >= 0; j--) {
+                    if (indices[j] == lettersForNumber(digits.substring(j, j+1)).size()) {
+
+                        if (j == 0) return result;
+
+                        indices[j] = 0; // back to original state
+                        indices[j - 1]++;
+                    }
+                }
+            }
         }
     }
 
@@ -71,7 +117,7 @@ public class PrintPhoneNumberCombination {
 
     public static void main(String[] args) {
         PrintPhoneNumberCombination printPhoneNumberCombination = new PrintPhoneNumberCombination();
-        ArrayList<String> result = printPhoneNumberCombination.letterCombinations("23");
+        ArrayList<String> result = printPhoneNumberCombination.iterativeLetterCombinations("23");
         for (String s : result)
             System.out.println(s);
     }
