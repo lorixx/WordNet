@@ -2,13 +2,7 @@ package pie;
 
 import java.util.HashMap;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Zhisheng
- * Date: 6/27/13
- * Time: 1:29 AM
- * To change this template use File | Settings | File Templates.
- */
+
 public class FirstNonRepeatedChar {
 
     public char find(String s) {
