@@ -22,14 +22,14 @@ public class Palindrome {
 
     /**
      * It is a correct Dynamic Programming solution
-     * Running time is O(n^3), but it failed on the online judge.
+     *
      *
      * @param s
      * @return
      */
     public static int minCut(String s) {
 
-//     /* This version is a O(n^3) implementation  */
+//     /* This version is a O(n^3) implementation  */  Running time is O(n^3), but it failed on the online judge.
 //        if (s == null) return 0;
 //        if (s.length() <= 1) return 0;
 //

@@ -16,7 +16,8 @@ import java.util.HashMap;
 
  Given an array of integers, find two numbers such that they add up to a specific target number.
 
- The function twoSum should return indices of the two numbers such that they add up to the target, where index1 must be less than index2. Please note that your returned answers (both index1 and index2) are not zero-based.
+ The function twoSum should return indices of the two numbers such that they add up to the target,
+ where index1 must be less than index2. Please note that your returned answers (both index1 and index2) are not zero-based.
 
  You may assume that each input would have exactly one solution.
 
@@ -164,11 +165,11 @@ public class Sum {
         int[] aux = Arrays.copyOf(num, num.length);
         Arrays.sort(aux);
 
-        int j = 0, k =num.length - 1, oldA = -9999999, oldB = -9999999, oldC = -9999999;
+        int j = 0, k = num.length - 1, oldA = -9999999, oldB = -9999999, oldC = -9999999;
         int oldStart = aux[0]; // keep track of start value
         for (int i = 0; i < aux.length - 2; i++) {
 
-            if (i != 0 && aux[i] == oldStart) {
+            if (i != 0 && aux[i] == oldStart) { // handle duplicate numbers
                 continue;
             }
 
