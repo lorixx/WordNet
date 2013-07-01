@@ -76,7 +76,6 @@ public class LongestSubstringWithoutRepeat {
 
                     int currentLength = end - start;
                     start = charIndexMap.get(s.charAt(end)) + 1;
-                    charIndexMap.put(s.charAt(end), end); // update its index
                     if (currentLength > max) max = currentLength;
                     end = start;
                     charIndexMap.clear();
@@ -94,8 +93,8 @@ public class LongestSubstringWithoutRepeat {
 
     public static void main(String[] args) {
         LongestSubstringWithoutRepeat longestSubstringWithoutRepeat = new LongestSubstringWithoutRepeat();
-        //System.out.println(longestSubstringWithoutRepeat.solution("abbabababa"));
-        System.out.println(longestSubstringWithoutRepeat.solution("56"));
+        System.out.println(longestSubstringWithoutRepeat.solution("abbabababa"));
+        //System.out.println(longestSubstringWithoutRepeat.solution("56"));
 
     }
 
