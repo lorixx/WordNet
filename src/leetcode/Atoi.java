@@ -1,11 +1,13 @@
 package leetcode;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zhisheng
- * Date: 7/2/13
- * Time: 12:58 AM
- * To change this template use File | Settings | File Templates.
+ *
+ String to Integer,
+ 1. trim the first white space
+ 2. check '+' , '-'
+ 3. handle Integer overflow and underflow case
+
+ *
  */
 public class Atoi {
     public int atoi(String str) {

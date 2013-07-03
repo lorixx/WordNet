@@ -10,8 +10,9 @@ public class InorderPrintBST {
      * start checking whether the current node is null or the stack is empty
      * 1. if currentNode is not null, we need to get its left node and set it as the current node and continue
      * 2. else we pop a node from the stack, then print this value, set the current node as its right node if there is any.
-     *
+     * <p/>
      * Eventually this will end
+     *
      * @param root
      */
     public static void inOrderPrint(TreeNode root) {
@@ -21,7 +22,7 @@ public class InorderPrintBST {
 
         TreeNode currentNode = root;
 
-        while ( currentNode != null || stack.size() > 0) {
+        while (currentNode != null || stack.size() > 0) {
 
             if (currentNode != null) {
                 stack.add(currentNode);
@@ -69,7 +70,7 @@ public class InorderPrintBST {
             if (currentNode != null) {
                 stack.add(currentNode);
                 if (currentNode.right != null) stack.add(currentNode.right);
-               // if (currentNode.left != null) stack.add(currentNode.left);
+                // if (currentNode.left != null) stack.add(currentNode.left);
                 currentNode = currentNode.left;
 
             } else {
@@ -79,6 +80,17 @@ public class InorderPrintBST {
                 System.out.println(node.value);
             }
         }
+    }
+
+    public static TreeNode mirror(TreeNode root) {
+
+        if (root == null) return root;
+        TreeNode currentNode = root;
+
+        TreeNode temp = currentNode.left;
+        currentNode.left = mirror(currentNode.right);
+        currentNode.right = mirror(temp);
+        return currentNode;
     }
 
     public static void main(String[] args) {
@@ -106,9 +118,10 @@ public class InorderPrintBST {
         d.left = b;
         d.right = f;
 
-        InorderPrintBST.preOrderPrint(d); // order list
+        InorderPrintBST.inOrderPrint(d); // order list
+        System.out.println("=========================");
 
-
+        InorderPrintBST.inOrderPrint(InorderPrintBST.mirror(d)); // order list
 
 
     }
