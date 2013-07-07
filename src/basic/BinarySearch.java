@@ -89,7 +89,7 @@ public class BinarySearch {
                 return findIndexInRotateArray(A, start, mid, target); // go LEFT
             if (target > A[mid] || target < A[start])
                 return findIndexInRotateArray(A, mid + 1, end, target); // go RIGHT
-        } else  {
+        } else {
             if (target == A[end])
                 return end;
             if (target > A[mid] && target < A[end])

@@ -44,5 +44,13 @@ public class PriorityQueue<Key extends Comparable<Key>> {
         return N > 0;
     }
 
+    private void sink(int index) {
+
+    }
+
+    private void swim(int index) {
+
+    }
+
 
 }
