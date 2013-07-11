@@ -16,46 +16,33 @@ public class InorderPrintBST {
      * @param root
      */
     public static void inOrderPrint(TreeNode root) {
-        if (root == null) return;
-
         ArrayList<TreeNode> stack = new ArrayList<TreeNode>();
-
         TreeNode currentNode = root;
-
-        while (currentNode != null || stack.size() > 0) {
-
+        while (currentNode != null || !stack.isEmpty()) {
             if (currentNode != null) {
-                stack.add(currentNode);
+                stack.add(currentNode);   // keep adding current node
                 currentNode = currentNode.left;
             } else {
-                TreeNode node = stack.remove(stack.size() - 1);
-                System.out.println(node.value);
-                currentNode = node.right;
+                currentNode = stack.remove(stack.size() - 1);
+                System.out.println(currentNode.value);
+                currentNode = currentNode.right;   // now update to its right node
             }
         }
+
     }
 
     public static void preOrderPrint(TreeNode root) {
-        if (root == null) return;
-
         ArrayList<TreeNode> stack = new ArrayList<TreeNode>();
-
         TreeNode currentNode = root;
-
-        while (currentNode != null || stack.size() > 0) {
+        while (currentNode != null || !stack.isEmpty()) {
             if (currentNode != null) {
                 System.out.println(currentNode.value);
-
-                if (currentNode.right != null) stack.add(currentNode.right);
+                stack.add(currentNode);   // keep adding current node
                 currentNode = currentNode.left;
             } else {
-                TreeNode node = stack.remove(stack.size() - 1);
-                System.out.println(node.value);
-
-                if (node.left != null) currentNode = node.left;
-
+                currentNode = stack.remove(stack.size() - 1);
+                currentNode = currentNode.right;   // now update to its right node
             }
-
         }
     }
 
@@ -63,22 +50,28 @@ public class InorderPrintBST {
         if (root == null) return;
 
         ArrayList<TreeNode> stack = new ArrayList<TreeNode>();
-
         TreeNode currentNode = root;
+        stack.add(currentNode);
 
-        while (currentNode != null || stack.size() > 0) {
-            if (currentNode != null) {
-                stack.add(currentNode);
-                if (currentNode.right != null) stack.add(currentNode.right);
-                // if (currentNode.left != null) stack.add(currentNode.left);
-                currentNode = currentNode.left;
+        TreeNode prevNode = null;
 
+        while (stack.size() > 0) {
+            currentNode = stack.get(stack.size() - 1); // peek the last element
+            if (prevNode == null || prevNode.left == currentNode || prevNode.right == currentNode) {
+
+                if (currentNode.left != null)
+                    stack.add(currentNode.left);
+                else if (currentNode.right != null)
+                    stack.add(currentNode.right);
+
+            } else if (currentNode.left == prevNode) {
+                if (currentNode.right != null)
+                    stack.add(currentNode.right);
             } else {
-                TreeNode node = stack.remove(stack.size() - 1);
-
-                //if(node.left != null || node.right!= null) currentNode = node;
-                System.out.println(node.value);
+                System.out.println(currentNode.value);
+                stack.remove(stack.size() - 1);
             }
+            prevNode = currentNode;
         }
     }
 
@@ -118,10 +111,10 @@ public class InorderPrintBST {
         d.left = b;
         d.right = f;
 
-        InorderPrintBST.inOrderPrint(d); // order list
+        InorderPrintBST.postOrderPrint(d); // order list
         System.out.println("=========================");
 
-        InorderPrintBST.inOrderPrint(InorderPrintBST.mirror(d)); // order list
+        //InorderPrintBST.inOrderPrint(InorderPrintBST.mirror(d)); // order list
 
 
     }

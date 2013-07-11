@@ -11,7 +11,7 @@ public class Pow {
     /**
      *
      * need to be careful about
-     * 1.base = 1, number is infinity case
+     * 1. base = 1, number is infinity case
      * 2. number = 0; number = 1
      * 3. number is negative
      * 4. use bit operation to increase performance
