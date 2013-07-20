@@ -4,13 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Zhisheng
- * Date: 7/16/13
- * Time: 9:21 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class LadderLength {
 
     /**
@@ -93,10 +87,13 @@ public class LadderLength {
 
                         result.add(newArray);
 
-                        bestLevelSoFar = map.get(currentString) + 1;
+                        bestLevelSoFar = map.get(currentString);
                     }
 
-                    if (dict.contains(newString) && !newString.equals(currentString) && !visited.contains(newString)) {
+                    if (dict.contains(newString)
+                            && !newString.equals(currentString)
+                            && (!visited.contains(newString) )) {    //|| map.get(newString) > map.get(currentString)
+
                         queue.add(newString);
                         visited.add(newString);
                         map.put(newString, map.get(currentString) + 1); // increase the level by adding one from its prev node
@@ -122,22 +119,14 @@ public class LadderLength {
     }
 
     public static void main(String[] args) {
-
-        HashSet<String> set = new HashSet<String>();
-        set.add("hot");
-        set.add("dot");
-        set.add("dog");
-        set.add("lot");
-        set.add("log");
-
-
-
-
         LadderLength ladderLength = new LadderLength();
-        System.out.println(ladderLength.ladderLength("hit", "cog", set));
+        HashSet<String> set = new HashSet<String>();
 
-        ArrayList<ArrayList<String>> result = ladderLength.findLadders("hit", "cog", set);
 
+        set.add("ted"); set.add("tex"); set.add("red"); set.add("tax"); set.add("tad");  set.add("den");
+        set.add("rex"); set.add("pee");
+
+        ArrayList<ArrayList<String>> result = ladderLength.findLadders("red", "tax", set);
         for (ArrayList<String> array : result) {
             for (String s : array) {
                 System.out.print(s + " ");
@@ -145,6 +134,37 @@ public class LadderLength {
             System.out.println();
         }
 
+        System.out.println("================");
+//
+//        set.clear();
+//        set.add("hot");
+//        set.add("dot");
+//        set.add("dog");
+//        set.add("lot");
+//        set.add("log");
+//        System.out.println(ladderLength.ladderLength("hit", "cog", set));
+//        result = ladderLength.findLadders("hit", "cog", set);
+//        for (ArrayList<String> array : result) {
+//            for (String s : array) {
+//                System.out.print(s + " ");
+//            }
+//            System.out.println();
+//        }
+//
+//        System.out.println("================");
+//
+//
+//        set.clear();
+//        set.add("a");  set.add("b"); set.add("c");
+//        result = ladderLength.findLadders("a", "c", set);
+//        for (ArrayList<String> array : result) {
+//            for (String s : array) {
+//                System.out.print(s + " ");
+//            }
+//            System.out.println();
+//        }
+//
+//        System.out.println("================");
     }
 
 }

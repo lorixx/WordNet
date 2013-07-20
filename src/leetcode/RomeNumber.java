@@ -1,5 +1,7 @@
 package leetcode;
 
+import java.util.HashMap;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Zhisheng
@@ -32,4 +34,46 @@ public class RomeNumber {
         }
         return buf.toString();
     }
+
+    /**
+     * Spent some time to figure this out.
+     * Since we need to check whether we need to substract the prev char as well,
+     * we need to check char at (start - 1) to see if it is less than char at (start)
+     *
+     */
+    public int romanToInt(String s) {
+
+        if (s.length() == 0) return 0;
+        HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+        map.put('M', 1000);
+        map.put('D', 500);
+        map.put('C', 100);
+        map.put('L', 50);
+        map.put('X', 10);
+        map.put('V', 5);
+        map.put('I', 1);
+
+
+        int start = s.length() - 1;
+        int result = 0;
+        while (start >= 0) {
+
+            if (start > 0) {
+                if (map.get(s.charAt(start - 1)) < map.get(s.charAt(start))) {
+                    result += map.get(s.charAt(start)) - map.get(s.charAt(start - 1));
+                    start -= 2;
+                } else {
+                    result += map.get(s.charAt(start));
+                    start--;
+                }
+
+            } else {
+                result += map.get(s.charAt(start--));
+            }
+
+        }
+
+        return result;
+    }
+
 }
