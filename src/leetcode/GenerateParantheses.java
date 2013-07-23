@@ -18,61 +18,31 @@ public class GenerateParantheses {
         // DO NOT write main() function
         if (n < 1) return null;
         ArrayList<String> result = new ArrayList<String>();
-        if (n == 1) {
-            result.add("()");
-            return result;
-        } else {
-            HashSet<String> set = new HashSet<String>();
-            ArrayList<String> subset = generateParenthesis(n - 1);
-            for (String subString : subset) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("()");
-                sb.append(subString);
 
-                String newString = sb.toString();
-                if (!set.contains(newString)) {
-                    result.add(newString);
-                    set.add(newString);
-                }
+        recursive(n, n, "", result);
 
-                for (int i = 0; i < subString.length(); i++) {
+        return result;
+    }
 
-                    if (subString.charAt(i) == ')') {
-                        StringBuilder sb2 = new StringBuilder();
-                        sb2.append("(");
-                        sb2.append(subString.substring())
+    private void recursive(int numOfLeft, int numOfRight, String oldString, ArrayList<String> result) {
 
-
-
-                    }
-
-
-                }
-
-                StringBuilder sb2 = new StringBuilder();
-                sb2.append("(");
-                sb2.append(subString);
-                sb2.append(")");
-                newString = sb2.toString();
-                if (!set.contains(newString)) {
-                    result.add(newString);
-                    set.add(newString);
-                }
-
-                StringBuilder sb3 = new StringBuilder();
-                sb3.append(subString);
-                sb3.append("()");
-                newString = sb3.toString();
-                if (!set.contains(newString)) {
-                    result.add(newString);
-                    set.add(newString);
-                }
-            }
-
-
-
-
-            return result;
+        if (numOfLeft > 0) {
+            recursive(numOfLeft - 1, numOfRight, oldString + "(", result);
         }
+
+        if (numOfLeft < numOfRight)
+            recursive(numOfLeft, numOfRight - 1, oldString + ")", result);
+
+        if (numOfRight == 0)
+            result.add(oldString);
+    }
+
+
+    public static void main(String[] args) {
+        GenerateParantheses generateParantheses = new GenerateParantheses();
+        ArrayList<String> result = generateParantheses.generateParenthesis(3);
+
+        for (String s : result)
+            System.out.println(s);
     }
 }
