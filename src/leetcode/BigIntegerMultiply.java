@@ -41,7 +41,7 @@ public class BigIntegerMultiply {
                 result[k] += longerArray[i] * shorterArray[j];
                 int tmp = result[k] / 10;
                 if (tmp > 0) {
-                    result[k - 1] += tmp;
+                    result[k - 1] += tmp;  // this is the addOn for the next compute
                     result[k] -= tmp * 10;
                 }
             }
