@@ -5,11 +5,13 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zhisheng
- * Date: 7/11/13
- * Time: 9:06 PM
- * To change this template use File | Settings | File Templates.
+
+ Given a collection of intervals, merge all overlapping intervals.
+
+ For example,
+ Given [1,3],[2,6],[8,10],[15,18],
+ return [1,6],[8,10],[15,18].
+
  */
 public class MergeInterval {
 
