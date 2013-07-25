@@ -1,7 +1,7 @@
 package leetcode;
 
 /**
- * Two pointers
+ * Two pointers, same technique as quick sort
  */
 public class ValidPalindrome {
 

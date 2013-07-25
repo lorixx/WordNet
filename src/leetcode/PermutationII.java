@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zhisheng
- * Date: 7/16/13
- * Time: 8:33 PM
- * To change this template use File | Settings | File Templates.
+ Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+ For example,
+ [1,1,2] have the following unique permutations:
+ [1,1,2], [1,2,1], and [2,1,1].
  */
 public class PermutationII {
 
@@ -24,7 +24,7 @@ public class PermutationII {
             result.add(allInt);
         }
 
-        HashSet<Integer> table = new HashSet<Integer>();
+        HashSet<Integer> table = new HashSet<Integer>();  //the key to remove duplicate is to use HashSet
         for (int i = 0; i < allInt.size(); i++) {
             int currentAvailable =  allInt.get(i);
             if (table.contains(currentAvailable)) continue;
