@@ -57,17 +57,17 @@ public class InorderPrintBST {
 
         while (stack.size() > 0) {
             currentNode = stack.get(stack.size() - 1); // peek the last element
-            if (prevNode == null || prevNode.left == currentNode || prevNode.right == currentNode) {
+            if (prevNode == null || prevNode.left == currentNode || prevNode.right == currentNode) { //going down of the tree
 
                 if (currentNode.left != null)
                     stack.add(currentNode.left);
                 else if (currentNode.right != null)
                     stack.add(currentNode.right);
 
-            } else if (currentNode.left == prevNode) {
+            } else if (currentNode.left == prevNode) {  // going up of the tree
                 if (currentNode.right != null)
                     stack.add(currentNode.right);
-            } else {
+            } else {  // should print in all these cases
                 System.out.println(currentNode.value);
                 stack.remove(stack.size() - 1);
             }
