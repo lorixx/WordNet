@@ -26,7 +26,7 @@ public class CountingSort {
 
         for (int i = 0; i < array.length; i++) {
             sortedArray[keys[array[i]]] = array[i];
-            keys[array[i]]++;
+            keys[array[i]]++;  //update the next position for value array[i]
         }
 
         return sortedArray;

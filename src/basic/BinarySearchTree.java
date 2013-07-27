@@ -31,16 +31,16 @@ public class BinarySearchTree {
             TreeNode newNode = new TreeNode(value, null, null);
             TreeNode currentNode = root;
             while (currentNode != null) {
-                if (currentNode.value == value)
+                if (currentNode.value == value)  // duplicate, do nothing
                     return;
 
-                if (currentNode.value < value) {
+                if (currentNode.value < value) {  // go right
                     if (currentNode.right == null) {
                         currentNode.right = newNode;
                         break;
                     }
                     currentNode = currentNode.right;
-                } else {
+                } else {                          // go left
                     if (currentNode.left == null) {
                         currentNode.left = newNode;
                         break;

@@ -46,6 +46,30 @@ public class InorderPrintBST {
         }
     }
 
+
+    /**
+     * Algorithm:
+     * We use a prev variable to keep track of the previously-traversed node.
+     * Let’s assume curr is the current node that’s on top of the stack.
+
+     (1)
+     When prev is curr‘s parent, we are traversing down the tree.
+     In this case, we try to traverse to curr‘s left child if available (ie, push left child to the stack).
+     If it is not available, we look at curr‘s right child.
+     If both left and right child do not exist (ie, curr is a leaf node),
+     we print curr‘s value and pop it off the stack.
+
+     (2)
+     If prev is curr‘s left child, we are traversing up the tree from the left.
+     We look at curr‘s right child. If it is available, then traverse down the right child
+     (ie, push right child to the stack), otherwise print curr‘s value and pop it off the stack.
+
+     (3)
+     If prev is curr‘s right child, we are traversing up the tree from the right.
+     In this case, we print curr‘s value and pop it off the stack.
+
+     * @param root
+     */
     public static void postOrderPrint(TreeNode root) {
         if (root == null) return;
 
@@ -57,17 +81,17 @@ public class InorderPrintBST {
 
         while (stack.size() > 0) {
             currentNode = stack.get(stack.size() - 1); // peek the last element
-            if (prevNode == null || prevNode.left == currentNode || prevNode.right == currentNode) {
+            if (prevNode == null || prevNode.left == currentNode || prevNode.right == currentNode) { //going down of the tree
 
                 if (currentNode.left != null)
                     stack.add(currentNode.left);
                 else if (currentNode.right != null)
                     stack.add(currentNode.right);
 
-            } else if (currentNode.left == prevNode) {
+            } else if (currentNode.left == prevNode) {  // going up of the tree
                 if (currentNode.right != null)
                     stack.add(currentNode.right);
-            } else {
+            } else {  // should print in all these cases
                 System.out.println(currentNode.value);
                 stack.remove(stack.size() - 1);
             }
