@@ -26,7 +26,7 @@ public class BinarySearchTree {
         if (root == null)
             root = new TreeNode(value, null, null);
 
-        else {
+        else { // 2. DFS the tree to search until the end
 
             TreeNode newNode = new TreeNode(value, null, null);
             TreeNode currentNode = root;
@@ -34,13 +34,13 @@ public class BinarySearchTree {
                 if (currentNode.value == value)  // duplicate, do nothing
                     return;
 
-                if (currentNode.value < value) {  // go right
+                if (currentNode.value < value) {  // go right and add to the right tree
                     if (currentNode.right == null) {
                         currentNode.right = newNode;
                         break;
                     }
                     currentNode = currentNode.right;
-                } else {                          // go left
+                } else {                          // go left and add it to the left tree if it is null
                     if (currentNode.left == null) {
                         currentNode.left = newNode;
                         break;
@@ -90,22 +90,19 @@ public class BinarySearchTree {
 
         if (root == null) return null;
 
-        if (root.value > value) root.left = deleteNode(root.left, value);
-        else if (root.value < value) root.right = deleteNode(root.right, value);
-        else {
+        if (root.value > value) root.left = deleteNode(root.left, value);   // important concept
+        else if (root.value < value) root.right = deleteNode(root.right, value); // important concept
+        else {   // Now the root is our target to delete
             size--;
             if (root.left == null) return root.right;
             if (root.right == null) return root.left;
 
             TreeNode t = root;
             root = smallestBiggerNode(t.right); // pick the smallest from its right tree
-            root.right = deleteMin(t.right);
+            root.right = deleteMin(t.right);    // delete the smallest from its right tree
             root.left = t.left;
-
-
-
         }
-        return root;
+        return root; // important, since we use recursive way to modify the tree structure, it is so beautiful
     }
 
     private TreeNode deleteMin(TreeNode root) {
