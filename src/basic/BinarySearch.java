@@ -29,6 +29,22 @@ public class BinarySearch {
             return binarySearch(A, start, currentIndex, target);    // binarySearch ending should be corresponding to currentIndex
     }
 
+    private int binarySearchIterative(int[] A, int target) {
+        int start = 0;
+        int end = A.length - 1;
+
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (A[mid] == target)
+                return mid;
+            else if (A[mid] < target)
+                start = mid + 1;
+            else
+                end = mid - 1;
+        }
+        return -1;
+    }
+
 
     /**
      * Find out the min value in the rotate array, return the index for it. -1 if not found.
