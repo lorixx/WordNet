@@ -33,9 +33,8 @@ public class PrintCombination {
                 sb.setCharAt(start, '0');
                 dfs(sb.toString(), start + 1);
 
-                StringBuilder sb2 = new StringBuilder(str);
-                sb2.setCharAt(start, '1');
-                dfs(sb2.toString(), start + 1);
+                sb.setCharAt(start, '1');
+                dfs(sb.toString(), start + 1);
 
             } else {
                 dfs(str, start + 1);
