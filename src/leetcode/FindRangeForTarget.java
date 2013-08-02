@@ -9,6 +9,9 @@ package leetcode;
  */
 public class FindRangeForTarget {
 
+
+    // 1. find the smaller one next to the target as the start index
+    // 2. find the bigger one next to the target as the end index, (need to be careful here, since it might overflow)
     public int[] searchRange(int[] A, int target) {
         // Start typing your Java solution below
         // DO NOT write main() function
