@@ -33,4 +33,31 @@ public class Sqrt {
         } else
             return sqrt(mid + 1, end, target);
     }
+
+    public int sqrtBetter(int x) {
+
+        if (x < 0) return -1;
+        if (x == 0 || x == 1) return x;
+        long start = 0;
+        long end = x;
+
+        while (end - start > 1) {
+            long mid = start + (end - start) / 2;
+            if (mid * mid > x)
+                end = mid;
+            else
+                start = mid;
+        }
+
+        return (int)start;
+    }
+
+    public static void main(String[] args) {
+       Sqrt sqrt = new Sqrt();
+        System.out.println(sqrt.sqrtBetter(1));
+
+    }
+
 }
+
+

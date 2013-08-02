@@ -10,9 +10,50 @@ package leetcode;
 public class FindRangeForTarget {
 
 
-    // 1. find the smaller one next to the target as the start index
-    // 2. find the bigger one next to the target as the end index, (need to be careful here, since it might overflow)
     public int[] searchRange(int[] A, int target) {
+        int startIndex = findStartIndex(A, target);
+        if (startIndex == -1) {  // if the start index is not found, there is no need to continue
+            int[] result = {-1, -1};
+            return result;
+        }
+
+        int endIndex = findEndIndex(A, target);
+        int[] result = {startIndex, endIndex};
+        return result;
+    }
+
+    // starting from the -1 to A.length - 1 position since we are finding the start index
+    public int findStartIndex(int[] A, int target) {
+        int start = -1;
+        int end = A.length - 1;
+
+        while (end - start > 1) {
+            int mid = start + (end - start) / 2;
+            if (A[mid] >= target) end = mid;  // if A[mid] == target, we still go left since we look for the start index
+            else
+                start = mid;
+        }
+
+
+        return A[end] == target ? end : -1;
+    }
+
+    // starting from 0 to A.length, we use A.length since we make sure A[start] will never overflow
+    public int findEndIndex(int[] A, int target) {
+        int start = 0;
+        int end = A.length;
+        while (end - start > 1) {
+            int mid = start + (end - start) / 2;
+            if (A[mid] > target) end = mid;
+            else start = mid;          // now when A[mid] == target we go right since we look for the end index
+        }
+
+        return A[start] == target ? start : -1;
+    }
+
+
+
+    public int[] searchRangeOldMethod(int[] A, int target) {
         // Start typing your Java solution below
         // DO NOT write main() function
         if (A.length < 1) {
@@ -96,8 +137,15 @@ public class FindRangeForTarget {
 
     }
 
+
     public static void main(String[] args) {
         FindRangeForTarget findRangeForTarget = new FindRangeForTarget();
+
+        int[] testStartArray = {1};
+        System.out.println(findRangeForTarget.findEndIndex(testStartArray, 1));
+
+
+
         int[] array = {1, 4};
         int[] result = findRangeForTarget.searchRange(array, 4);
         for (int i : result) System.out.println(i);
