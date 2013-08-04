@@ -60,7 +60,7 @@ public class BinarySearchTree {
             if (currentNode.value == value)
                 return currentNode;
 
-            if (currentNode.value <  value)
+            if (currentNode.value < value)
                 currentNode = currentNode.right;
             else
                 currentNode = currentNode.left;
@@ -76,14 +76,10 @@ public class BinarySearchTree {
      * 3. One children, move its child into the tree
      * 4. Two children, find the smallest element that is larger than the target node, replace its place
      *
-     *
      * @param value
      */
     public void deleteNode(int value) {
-
         root = deleteNode(root, value);
-
-
     }
 
     private TreeNode deleteNode(TreeNode root, int value) {
@@ -94,10 +90,10 @@ public class BinarySearchTree {
         else if (root.value < value) root.right = deleteNode(root.right, value); // important concept
         else {   // Now the root is our target to delete
             size--;
-            if (root.left == null) return root.right;
-            if (root.right == null) return root.left;
+            if (root.left == null) return root.right;  // only one right child
+            if (root.right == null) return root.left;  // only one left child
 
-            TreeNode t = root;
+            TreeNode t = root;  // save the old root to a temp value
             root = smallestBiggerNode(t.right); // pick the smallest from its right tree
             root.right = deleteMin(t.right);    // delete the smallest from its right tree
             root.left = t.left;
@@ -128,7 +124,7 @@ public class BinarySearchTree {
     }
 
     public void inOrderPrint() {
-         inOrderPrint(root);
+        inOrderPrint(root);
         System.out.println("\n=====");
     }
 

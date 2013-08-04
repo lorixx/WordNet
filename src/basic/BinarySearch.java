@@ -23,9 +23,9 @@ public class BinarySearch {
 
         int currentIndex = start + (end - start) / 2;
         if (A[currentIndex] == target) return currentIndex;
-        if (A[currentIndex] < target)
+        if (A[currentIndex] < target)  // go right
             return binarySearch(A, currentIndex + 1, end, target);
-        else
+        else                           // go left
             return binarySearch(A, start, currentIndex, target);    // binarySearch ending should be corresponding to currentIndex
     }
 

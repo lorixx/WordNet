@@ -28,7 +28,6 @@ public class InorderPrintBST {
                 currentNode = currentNode.right;   // now update to its right node
             }
         }
-
     }
 
     public static void preOrderPrint(TreeNode root) {
