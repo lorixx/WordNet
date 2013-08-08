@@ -42,7 +42,7 @@ public class AddBinary {
         if (sign == 1)
             sb.append('1');
 
-        sb.reverse();
+        sb.reverse();    // since string builder keep appending the most significant bit
         return sb.toString();
 
     }
