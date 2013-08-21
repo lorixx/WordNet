@@ -41,9 +41,9 @@ public class FindKthElement {
 
         if (index == k - 1) return A[index];
         else if (index < k - 1)
-            return find(A, index +1, end, k);
+            return find(A, index +1, end, k);    // go right
         else
-            return find(A, start, index - 1, k);
+            return find(A, start, index - 1, k); // go left
     }
 
     /**

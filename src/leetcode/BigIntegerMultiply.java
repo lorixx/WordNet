@@ -49,7 +49,7 @@ public class BigIntegerMultiply {
 
         StringBuilder sb = new StringBuilder();
 
-        if (result[0] != 0) sb.append(result[0]);
+        if (result[0] != 0) sb.append(result[0]);  // important, since sometimes there is no element at the first position
 
         for (int i = 1; i < result.length; i++)
             sb.append(result[i]);
