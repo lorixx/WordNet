@@ -47,9 +47,36 @@ public class AddBinary {
 
     }
 
+
+    public String addBinaryBetter(String a, String b) {
+        StringBuilder sb = new StringBuilder();
+        int i = a.length() - 1;
+        int j = b.length() - 1;
+        int carry = 0;
+
+        while (i >= 0 || j >= 0) {
+            int sum = 0;
+            sum += i >= 0 ? a.charAt(i) - '0' : 0;
+            sum += j >= 0 ? b.charAt(j) - '0' : 0;
+            sum += carry;
+
+            carry = sum / 2;
+            sum %= 2;  // one digit
+            sb.append(sum);
+            i--; j--;
+        }
+
+        if (carry == 1)
+            sb.append("1");
+
+        sb.reverse();
+        return sb.toString();
+    }
+
+
     public static void main(String[] args) {
         AddBinary addBinary = new AddBinary();
 
-        System.out.println(addBinary.addBinary("10", "11"));
+        System.out.println(addBinary.addBinaryBetter("101", "111"));
     }
 }

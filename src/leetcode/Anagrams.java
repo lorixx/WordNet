@@ -1,16 +1,11 @@
 package leetcode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zhisheng
- * Date: 7/22/13
- * Time: 11:50 PM
- * To change this template use File | Settings | File Templates.
+ Given an array of strings, return all groups of strings that are anagrams.
+
+ Note: All inputs will be in lower-case.
  */
 public class Anagrams {
     public ArrayList<String> anagrams(String[] strs) {
@@ -39,6 +34,34 @@ public class Anagrams {
             String newString = new String(sorted);
             if (anagrams.contains(newString))
                 result.add(s);
+        }
+
+        return result;
+    }
+
+    public ArrayList<String> betterAnagrams(String[] strs) {
+        HashMap<String, LinkedList<String>> map = new HashMap<String, LinkedList<String>>();
+        ArrayList<String> result = new ArrayList<String>();
+
+        for (String s : strs) {
+            char[] sorted = s.toCharArray();
+            Arrays.sort(sorted);
+            String newString = new String(sorted);
+            if (map.containsKey(newString)) {
+                map.get(newString).add(s);
+            } else {
+                LinkedList<String> list = new LinkedList<String>();
+                list.add(s);
+                map.put(newString, list);
+            }
+        }
+
+        for (String key : map.keySet()) {
+            LinkedList<String> currentList = map.get(key);
+            if (currentList.size() > 1) {
+                for (String str : currentList)
+                    result.add(str);
+            }
         }
 
         return result;
