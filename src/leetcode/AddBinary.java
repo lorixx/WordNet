@@ -47,7 +47,9 @@ public class AddBinary {
 
     }
 
-
+    /*
+     This is a better version of add binary function
+     */
     public String addBinaryBetter(String a, String b) {
         StringBuilder sb = new StringBuilder();
         int i = a.length() - 1;

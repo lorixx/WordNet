@@ -1,11 +1,7 @@
 package leetcode;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zhisheng
- * Date: 8/2/13
- * Time: 4:44 PM
- * To change this template use File | Settings | File Templates.
+    Check whether a binary tree is balanced or not, use a technique which is very efficient without recalculate
  */
 public class BalancedBinaryTree {
     private class TreeNode {
@@ -34,10 +30,10 @@ public class BalancedBinaryTree {
 
         int heightDiff = leftHeight - rightHeight;
 
-        if (Math.abs(heightDiff) > 1) {
+        if (Math.abs(heightDiff) > 1) {   // not a balanced tree
             return -1;
         } else
-            return Math.max(leftHeight, rightHeight) + 1;
+            return Math.max(leftHeight, rightHeight) + 1;  // return the bigger height + 1
 
     }
 }
